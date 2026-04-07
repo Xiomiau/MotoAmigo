@@ -224,6 +224,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         JOptionPane.showMessageDialog(this,"Entrega rechazada,la solicitud seguirá disponible para otros repartidores" ,"Pedido Rechazado",JOptionPane.INFORMATION_MESSAGE);
+        dispose();
     }//GEN-LAST:event_btn_rechazarActionPerformed
 
     private void btn_aceptar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptar1ActionPerformed
@@ -271,7 +272,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PublicarRepartidoresUI().setVisible(true);
+                //new PublicarRepartidoresUI().setVisible(true);
 
                 PublicarRepartidoresUI frame = new PublicarRepartidoresUI();
 
