@@ -6,7 +6,8 @@ package com.mycompany.motoamigopresentacion;
 
 import javax.swing.JOptionPane;
 import mx.itson.motoamigo.publicarrepartidores.casouso.ControlPublicarRepartidores;
-import com.mycompany.motoamigodto.SolicitudEntregaDTO;
+import mx.itson.motoamigo.publicarrepartidores.dto.SolicitudEntregaDTO;
+
 
 /**
  *

@@ -9,3 +9,9 @@ dist/
 nbactions.xml
 nb-configuration.xml
 
+/ConsultarRuta/target/
+/MotoAmigoPublicarRepartidores/target/
+/MotoAmigoPersistencia/target/
+/MotoAmigoNegocio/target/
+/MotoAmigoDto/target/
+/MotoAmigoPresentacion/target/
