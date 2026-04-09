@@ -4,9 +4,9 @@
  */
 package com.mycompany.motoamigopresentacion;
 
+import com.mycompany.motoamigodto.SolicitudEntregaDTO;
+import com.mycompany.motoamigopublicarrepartidores1.ControlPublicarRepartidores;
 import javax.swing.JOptionPane;
-import mx.itson.motoamigo.publicarrepartidores.casouso.ControlPublicarRepartidores;
-import mx.itson.motoamigo.publicarrepartidores.dto.SolicitudEntregaDTO;
 
 
 /**
@@ -20,7 +20,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
 
     public PublicarRepartidoresUI() {
         initComponents();
-        //cargarSolicitud(SolicitudEntregaDTO solicitud);
+        cargarSolicitud(solicitud);
     }
 
     public void cargarSolicitud(SolicitudEntregaDTO solicitud) {

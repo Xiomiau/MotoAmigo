@@ -9,8 +9,9 @@
         <module>../MotoAmigoDto</module>
         <module>../MotoAmigoPersistencia</module>
         <module>../MotoAmigoNegocio</module>
-        <module>../MotoAmigoPublicarRepartidores</module>
+        <module>../MotoAmigoPublicarRepartidores1</module>
         <module>../MotoAmigoSeguimientoTiempoReal</module>
+        <module>../MotoAmigoCalculoRuta</module>
         <module>../MotoAmigoPresentacion</module>
     </modules>
     <properties>

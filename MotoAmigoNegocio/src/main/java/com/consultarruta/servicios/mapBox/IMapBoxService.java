@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
+
 package com.consultarruta.servicios.mapBox;
 
 import com.mycompany.motoamigodto.RutaResponseDTO;
+import com.mycompany.motoamigodto.UbicacionDTO;
 
 /**
  *
@@ -12,5 +10,7 @@ import com.mycompany.motoamigodto.RutaResponseDTO;
  */
 public interface IMapBoxService {
     
-    RutaResponseDTO obtenerRuta(String origen, String destino);
+    public abstract RutaResponseDTO obtenerRuta(String origen, String destino);
+    public abstract UbicacionDTO obtenerSiguienteUbicacion();
+    boolean haTerminado();
 }

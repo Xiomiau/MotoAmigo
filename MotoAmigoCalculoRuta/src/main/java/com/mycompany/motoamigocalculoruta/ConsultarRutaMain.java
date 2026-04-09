@@ -5,7 +5,6 @@
 package com.mycompany.motoamigocalculoruta;
 
 import com.mycompany.motoamigodto.RutaRequestDTO;
-import com.mycompany.motoamigopresentacion.ConsultarRutaFORM;
 
 /**
  *
@@ -13,20 +12,20 @@ import com.mycompany.motoamigopresentacion.ConsultarRutaFORM;
  */
 public class ConsultarRutaMain {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // Crear un mock del request (simulando que viene de otra pantalla)
-        RutaRequestDTO mockRequest = new RutaRequestDTO(
-                "Av. Universidad 123, Ciudad Obregón",
-                "Calle Morelos 456, Ciudad Obregón"
-        );
-
-        // Abrir el formulario con el request mockeado
-        java.awt.EventQueue.invokeLater(() -> {
-            new ConsultarRutaFORM(mockRequest).setVisible(true);
-        });
-    }
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String[] args) {
+//        // Crear un mock del request (simulando que viene de otra pantalla)
+//        RutaRequestDTO mockRequest = new RutaRequestDTO(
+//                "Av. Universidad 123, Ciudad Obregón",
+//                "Calle Morelos 456, Ciudad Obregón"
+//        );
+//
+//        // Abrir el formulario con el request mockeado
+//        java.awt.EventQueue.invokeLater(() -> {
+//            new ConsultarRutaFORM(mockRequest).setVisible(true);
+//        });
+//    }
 
 }
