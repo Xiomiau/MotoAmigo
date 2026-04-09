@@ -36,6 +36,7 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
         inicializarPanelMapa();
         IRutaBO rutaBO = new RutaBO(new MapBoxMock());
         casoUso = new ConsultarRuta(rutaBO);
+        setLocationRelativeTo(null);
 
         RutaResponseDTO response = casoUso.consultarRuta(request);
 
@@ -108,6 +109,7 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
         lblDistancia = new javax.swing.JLabel();
         lblETA = new javax.swing.JLabel();
         btnEnviarSolicitud = new javax.swing.JButton();
+        btnCancelarSolicitud = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -213,11 +215,27 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
         btnEnviarSolicitud.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnEnviarSolicitud.setForeground(new java.awt.Color(255, 255, 255));
         btnEnviarSolicitud.setText("Publicar Solicitud");
+        btnEnviarSolicitud.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarSolicitudActionPerformed(evt);
+            }
+        });
+
+        btnCancelarSolicitud.setBackground(new java.awt.Color(255, 102, 0));
+        btnCancelarSolicitud.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnCancelarSolicitud.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelarSolicitud.setText("Cancelar");
+        btnCancelarSolicitud.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarSolicitudActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelSuperior, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -227,9 +245,10 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
                             .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(25, 25, 25)
-                        .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(25, Short.MAX_VALUE))
-            .addComponent(panelSuperior, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,7 +259,9 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -257,6 +278,15 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
+       new SeguimientoEnTiempoReal().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
+
+    private void btnCancelarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSolicitudActionPerformed
+       this.dispose();
+    }//GEN-LAST:event_btnCancelarSolicitudActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -266,7 +296,7 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
                 "Av. Universidad 123, Ciudad Obregón",
                 "Calle Morelos 456, Ciudad Obregón"
         );
-
+        
         // Abrir el formulario con el request mockeado
         java.awt.EventQueue.invokeLater(() -> {
             new ConsultarRutaFORM(mockRequest).setVisible(true);
@@ -274,6 +304,7 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelarSolicitud;
     private javax.swing.JButton btnEnviarSolicitud;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

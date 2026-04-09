@@ -4,6 +4,7 @@
  */
 package com.mycompany.motoamigopresentacion;
 
+import com.mycompany.motoamigodto.RutaRequestDTO;
 import com.mycompany.motoamigodto.SolicitudEntregaDTO;
 import com.mycompany.motoamigopublicarrepartidores1.ControlPublicarRepartidores;
 import javax.swing.JOptionPane;
@@ -20,12 +21,11 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
 
     public PublicarRepartidoresUI() {
         initComponents();
-        cargarSolicitud(solicitud);
+        setLocationRelativeTo(null);
     }
 
     public void cargarSolicitud(SolicitudEntregaDTO solicitud) {
         this.solicitud = solicitud;
-
         txt_origen.setText(solicitud.getOrigen());
         txt_destino.setText(solicitud.getDestino());
         txt_tipoPaquete.setText(solicitud.getTipoPaquete());
@@ -229,17 +229,16 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_rechazarActionPerformed
 
     private void btn_aceptar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptar1ActionPerformed
-        // TODO add your handling code here:
-
         boolean resultado = control.publicarSolicitud(solicitud);
-
         if (resultado) {
-            JOptionPane.showMessageDialog(this, "Entrega aceptada, dirígete al punto de recolección", "Entrega Aceptada", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Entrega aceptada, dirígete al punto de recolección","Entrega Aceptada", JOptionPane.INFORMATION_MESSAGE);
+
+            RutaRequestDTO request = new RutaRequestDTO(solicitud.getOrigen(),solicitud.getDestino());
+
+            new ConsultarRutaFORM(request).setVisible(true);
             dispose();
         } else {
-
-            JOptionPane.showMessageDialog(this,"No se pudo aceptar la entrega. Intenta de nuevo.","Error", JOptionPane.ERROR_MESSAGE);
-
+            JOptionPane.showMessageDialog(this, "No se pudo aceptar la entrega. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_aceptar1ActionPerformed
 
@@ -273,7 +272,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new PublicarRepartidoresUI().setVisible(true);
+                
 
                 PublicarRepartidoresUI frame = new PublicarRepartidoresUI();
 
@@ -295,9 +294,9 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
                         // distancia
                         3.2
                 );
-
+                
                 frame.cargarSolicitud(solicitudMock);
-                frame.setVisible(true);
+                new PublicarRepartidoresUI().setVisible(true);
             }
         });
     }
