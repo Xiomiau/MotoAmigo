@@ -1,29 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package mx.itson.motoamigo.publicarrepartidores.presentacion;
 
 import javax.swing.JOptionPane;
-import mx.itson.motoamigo.publicarrepartidores.casouso.ControlPublicarRepartidores;
+import mx.itson.motoamigo.publicarrepartidores.casouso.ControlPublicarSolicitud;
 import mx.itson.motoamigo.publicarrepartidores.dto.SolicitudEntregaDTO;
 
 /**
  *
  * @author xiomi
  */
-public class PublicarRepartidoresUI extends javax.swing.JFrame {
+public class PublicarARepartidoresUI_vistaRepartidor extends javax.swing.JFrame {
 
-    private ControlPublicarRepartidores control = new ControlPublicarRepartidores();
-    private SolicitudEntregaDTO solicitud;
+    private ControlPublicarSolicitud control = new ControlPublicarSolicitud();
+    private SolicitudEntregaDTO solicitudMock;
 
-    public PublicarRepartidoresUI() {
+    public PublicarARepartidoresUI_vistaRepartidor() {
         initComponents();
-        //cargarSolicitud(SolicitudEntregaDTO solicitud);
     }
 
     public void cargarSolicitud(SolicitudEntregaDTO solicitud) {
-        this.solicitud = solicitud;
+        this.solicitudMock = solicitud;
 
         txt_origen.setText(solicitud.getOrigen());
         txt_destino.setText(solicitud.getDestino());
@@ -141,9 +137,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt_distancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(18, 18, 18)))
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -230,7 +224,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
     private void btn_aceptar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptar1ActionPerformed
         // TODO add your handling code here:
 
-        boolean resultado = control.publicarSolicitud(solicitud);
+        boolean resultado = control.publicarSolicitud(solicitudMock);
 
         if (resultado) {
             JOptionPane.showMessageDialog(this, "Entrega aceptada, dirígete al punto de recolección", "Entrega Aceptada", JOptionPane.INFORMATION_MESSAGE);
@@ -259,43 +253,27 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaRepartidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaRepartidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaRepartidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaRepartidor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new PublicarRepartidoresUI().setVisible(true);
+                //new PublicarARepartidoresUI_vistaRepartidor().setVisible(true);
 
-                PublicarRepartidoresUI frame = new PublicarRepartidoresUI();
+                PublicarARepartidoresUI_vistaRepartidor frame = new PublicarARepartidoresUI_vistaRepartidor();
 
-                SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
-                        // origen
-                        "Reforma 123",
-                        // destino
-                        "Polanco 45",
-                        // tipoPaquete
-                        "Caja",
-                        // pesoAprox
-                        2.5,
-                        // idEmprendedor
-                        1,
-                        // idEnvio
-                        101,
-                        // estado
-                        "pendiente",
-                        // distancia
-                        3.2
-                );
+                
 
-                frame.cargarSolicitud(solicitudMock);
+                
                 frame.setVisible(true);
             }
         });

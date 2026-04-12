@@ -7,6 +7,8 @@ package mx.itson.motoamigo.publicarrepartidores.negocio;
 import java.util.List;
 import mx.itson.motoamigo.publicarrepartidores.dto.RepartidorDTO;
 import mx.itson.motoamigo.publicarrepartidores.dto.SolicitudEntregaDTO;
+import mx.itson.motoamigo.publicarrepartidores.persistencia.EmprendedorDAO;
+import mx.itson.motoamigo.publicarrepartidores.persistencia.IEmprendedorDAO;
 import mx.itson.motoamigo.publicarrepartidores.persistencia.IRepartidorDAO;
 import mx.itson.motoamigo.publicarrepartidores.persistencia.RepartidorDAO;
 
@@ -14,16 +16,17 @@ import mx.itson.motoamigo.publicarrepartidores.persistencia.RepartidorDAO;
  *
  * @author xiomi
  */
-public class GestionRepartidores implements IGestionRepartidores {
+public class GestionSolicitudes implements IGestionSolicitudes {
     
     private IRepartidorDAO repartidorDAO;
+    private IEmprendedorDAO emprendedorDAO;
 
-    public GestionRepartidores() {
+    public GestionSolicitudes() {
         this.repartidorDAO = new RepartidorDAO();
     }
 
     @Override
-    public List<RepartidorDTO> obtenerRepartidoresDisponibles() {
+    public RepartidorDTO obtenerRepartidoresDisponibles() {
         return repartidorDAO.obtenerRepartidoresDisponibles();
     }
 
@@ -35,6 +38,11 @@ public class GestionRepartidores implements IGestionRepartidores {
         }
         
         return true;
+    }
+
+    @Override
+    public EmprendedorDAO obtenerEmprendedorDAO() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     

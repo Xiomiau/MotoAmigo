@@ -1,20 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
+
 package mx.itson.motoamigo.publicarrepartidores.negocio;
 
 import java.util.List;
 import mx.itson.motoamigo.publicarrepartidores.dto.RepartidorDTO;
 import mx.itson.motoamigo.publicarrepartidores.dto.SolicitudEntregaDTO;
+import mx.itson.motoamigo.publicarrepartidores.persistencia.EmprendedorDAO;
 
 /**
  *
  * @author xiomi
  */
-public interface IGestionRepartidores {
+public interface IGestionSolicitudes {
     
-    List<RepartidorDTO> obtenerRepartidoresDisponibles();
+    RepartidorDTO obtenerRepartidoresDisponibles();
+    EmprendedorDAO obtenerEmprendedorDAO();
     
     boolean publicarSolicitud(SolicitudEntregaDTO solicitud);
     

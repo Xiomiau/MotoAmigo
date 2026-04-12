@@ -11,4 +11,5 @@
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>mx.itson.motoamigo.publicarrepartidores.PublicarRepartidores</exec.mainClass>
     </properties>
+    <name>PublicarARepartidores</name>
 </project>

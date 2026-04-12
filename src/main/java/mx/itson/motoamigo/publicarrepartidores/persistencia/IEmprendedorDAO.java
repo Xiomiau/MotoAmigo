@@ -4,14 +4,14 @@
  */
 package mx.itson.motoamigo.publicarrepartidores.persistencia;
 
-import mx.itson.motoamigo.publicarrepartidores.dto.RepartidorDTO;
+import mx.itson.motoamigo.publicarrepartidores.dto.EmprendedorDTO;
 
 /**
  *
  * @author xiomi
  */
-public interface IRepartidorDAO {
+public interface IEmprendedorDAO {
     
-     RepartidorDTO obtenerRepartidoresDisponibles();
+    EmprendedorDTO obtenerEmprendedor();
     
 }
