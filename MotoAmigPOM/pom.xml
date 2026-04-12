@@ -13,6 +13,7 @@
         <module>../MotoAmigoSeguimientoTiempoReal</module>
         <module>../MotoAmigoCalculoRuta</module>
         <module>../MotoAmigoPresentacion</module>
+        <module>../../../NetBeansProjects/MotoAmigoRegistrarIncidente</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
