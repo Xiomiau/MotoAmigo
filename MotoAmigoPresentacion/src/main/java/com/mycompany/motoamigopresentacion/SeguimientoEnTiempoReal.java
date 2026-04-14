@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 /**
@@ -35,10 +36,10 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
     }
 
     /**
-     * Inicializa el panel donde se va a poner el mapa usando JFXPanel con un WebView de
-     * JavaFX. Carga el archivo mapa.html dentro del WebView. 
-     * ya que el mapa se termina de cargar, hace que se recalcule el
-     * tamaño con invalidateSize() en el html y de ahi comienza el seguimiento del
+     * Inicializa el panel donde se va a poner el mapa usando JFXPanel con un
+     * WebView de JavaFX. Carga el archivo mapa.html dentro del WebView. ya que
+     * el mapa se termina de cargar, hace que se recalcule el tamaño con
+     * invalidateSize() en el html y de ahi comienza el seguimiento del
      * repartidor.
      */
     private void inicializarMapa() {
@@ -75,11 +76,11 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
     }
 
     /**
-     * Crea temporizador que cada 3 segundos consulta la siguiente
-     * ubicación del repartidor usando el modulo de funcionalidad. 
-     * Actualiza el estado y el historial de texto
-     * y mueve el marcador en el mapa usando mover(lat, lng) .
-     * 
+     * Crea temporizador que cada 3 segundos consulta la siguiente ubicación del
+     * repartidor usando el modulo de funcionalidad. Actualiza el estado y el
+     * historial de texto y mueve el marcador en el mapa usando mover(lat, lng)
+     * .
+     *
      */
     private void iniciarSeguimiento() {
         Timer timer = new Timer(3000, null);
@@ -122,8 +123,8 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
         lblEstado = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtSeguimiento = new javax.swing.JTextArea();
-        btnEnviarSolicitud = new javax.swing.JButton();
-        btnEnviarSolicitud1 = new javax.swing.JButton();
+        btnContactarRepa = new javax.swing.JButton();
+        btnVolverMenu = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -208,23 +209,23 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnEnviarSolicitud.setBackground(new java.awt.Color(255, 102, 0));
-        btnEnviarSolicitud.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnEnviarSolicitud.setForeground(new java.awt.Color(255, 255, 255));
-        btnEnviarSolicitud.setText("Contactar Repartidor");
-        btnEnviarSolicitud.addActionListener(new java.awt.event.ActionListener() {
+        btnContactarRepa.setBackground(new java.awt.Color(255, 102, 0));
+        btnContactarRepa.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnContactarRepa.setForeground(new java.awt.Color(255, 255, 255));
+        btnContactarRepa.setText("Contactar Repartidor");
+        btnContactarRepa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarSolicitudActionPerformed(evt);
+                btnContactarRepaActionPerformed(evt);
             }
         });
 
-        btnEnviarSolicitud1.setBackground(new java.awt.Color(255, 102, 0));
-        btnEnviarSolicitud1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnEnviarSolicitud1.setForeground(new java.awt.Color(255, 255, 255));
-        btnEnviarSolicitud1.setText("Volver al menu");
-        btnEnviarSolicitud1.addActionListener(new java.awt.event.ActionListener() {
+        btnVolverMenu.setBackground(new java.awt.Color(255, 102, 0));
+        btnVolverMenu.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnVolverMenu.setForeground(new java.awt.Color(255, 255, 255));
+        btnVolverMenu.setText("Volver al menu");
+        btnVolverMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarSolicitud1ActionPerformed(evt);
+                btnVolverMenuActionPerformed(evt);
             }
         });
 
@@ -237,12 +238,12 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(btnEnviarSolicitud)
+                        .addComponent(btnContactarRepa)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEnviarSolicitud1)
+                        .addComponent(btnVolverMenu)
                         .addGap(10, 10, 10))
                     .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelMapa, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(panelMapa, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 433, Short.MAX_VALUE)
                     .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -257,8 +258,8 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEnviarSolicitud1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnContactarRepa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -267,18 +268,24 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
+    private void btnContactarRepaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContactarRepaActionPerformed
+        JOptionPane.showMessageDialog(
+                this,
+                "Contactando con el repartidor",
+                "",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
 
-    private void btnEnviarSolicitud1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitud1ActionPerformed
+    }//GEN-LAST:event_btnContactarRepaActionPerformed
+
+    private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnEnviarSolicitud1ActionPerformed
+    }//GEN-LAST:event_btnVolverMenuActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEnviarSolicitud;
-    private javax.swing.JButton btnEnviarSolicitud1;
+    private javax.swing.JButton btnContactarRepa;
+    private javax.swing.JButton btnVolverMenu;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;

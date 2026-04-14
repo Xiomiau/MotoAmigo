@@ -4,11 +4,9 @@
  */
 package com.mycompany.motoamigopresentacion;
 
-import com.mycompany.motoamigodto.RutaRequestDTO;
 import com.mycompany.motoamigodto.SolicitudEntregaDTO;
-import com.mycompany.motoamigopublicarrepartidores1.ControlPublicarRepartidores;
 import javax.swing.JOptionPane;
-
+import controladores.ControlPublicarRepartidores;
 
 /**
  *
@@ -21,11 +19,12 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
 
     public PublicarRepartidoresUI() {
         initComponents();
-        setLocationRelativeTo(null);
+        //cargarSolicitud(SolicitudEntregaDTO solicitud);
     }
 
     public void cargarSolicitud(SolicitudEntregaDTO solicitud) {
         this.solicitud = solicitud;
+
         txt_origen.setText(solicitud.getOrigen());
         txt_destino.setText(solicitud.getDestino());
         txt_tipoPaquete.setText(solicitud.getTipoPaquete());
@@ -142,9 +141,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt_distancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(18, 18, 18)))
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -229,16 +226,17 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_rechazarActionPerformed
 
     private void btn_aceptar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptar1ActionPerformed
+        // TODO add your handling code here:
+
         boolean resultado = control.publicarSolicitud(solicitud);
+
         if (resultado) {
-            JOptionPane.showMessageDialog(this, "Entrega aceptada, dirígete al punto de recolección","Entrega Aceptada", JOptionPane.INFORMATION_MESSAGE);
-
-            RutaRequestDTO request = new RutaRequestDTO(solicitud.getOrigen(),solicitud.getDestino());
-
-            new ConsultarRutaFORM(request).setVisible(true);
+            JOptionPane.showMessageDialog(this, "Entrega aceptada, dirígete al punto de recolección", "Entrega Aceptada", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo aceptar la entrega. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            JOptionPane.showMessageDialog(this,"No se pudo aceptar la entrega. Intenta de nuevo.","Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }//GEN-LAST:event_btn_aceptar1ActionPerformed
 
@@ -272,7 +270,7 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
+                //new PublicarRepartidoresUI().setVisible(true);
 
                 PublicarRepartidoresUI frame = new PublicarRepartidoresUI();
 
@@ -294,9 +292,9 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
                         // distancia
                         3.2
                 );
-                
+
                 frame.cargarSolicitud(solicitudMock);
-                new PublicarRepartidoresUI().setVisible(true);
+                frame.setVisible(true);
             }
         });
     }

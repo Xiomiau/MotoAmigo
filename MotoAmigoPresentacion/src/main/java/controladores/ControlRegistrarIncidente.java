@@ -2,15 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.motoamigoregistrarincidenteControl;
+package controladores;
 
 
-import com.mycompany.motoamigoregistrarincidenteDTO.EntregaDTO;
-import com.mycompany.motoamigoregistrarincidenteDTO.IncidenteDTO;
-import com.mycompany.motoamigoregistrarincidentePresentacion.FrmDetallePedido;
-import com.mycompany.motoamigoregistrarincidentePresentacion.FrmEstadoReporte;
-import com.mycompany.motoamigoregistrarincidentePresentacion.FrmFormularioIncidente;
-import com.mycompany.motoamigoregistrarincidentePresentacion.FrmNavegacion;
+import com.mycompany.motoamigodto.EntregaDTO;
+import com.mycompany.motoamigodto.IncidenteDTO;
+import com.mycompany.motoamigopresentacion.FrmDetallePedido;
+import com.mycompany.motoamigopresentacion.FrmDetallePedido;
+import com.mycompany.motoamigopresentacion.FrmEstadoReporte;
+import com.mycompany.motoamigopresentacion.FrmEstadoReporte;
+import com.mycompany.motoamigopresentacion.FrmFormularioIncidente;
+import com.mycompany.motoamigopresentacion.FrmFormularioIncidente;
+import com.mycompany.motoamigopresentacion.FrmNavegacion;
+import com.mycompany.motoamigopresentacion.FrmNavegacion;
 
 import javax.swing.JOptionPane;
 

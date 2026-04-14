@@ -4,6 +4,8 @@
  */
 package com.mycompany.motoamigoregistrarincidenteControl;
 
+import com.mycompany.motoamigopresentacion.ControlRegistrarIncidente;
+
 /**
  *
  * @author Dell

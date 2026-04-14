@@ -43,13 +43,13 @@
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                          <Component id="btnEnviarSolicitud" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnContactarRepa" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="btnEnviarSolicitud1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnVolverMenu" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       </Group>
                       <Component id="panelSuperior" max="32767" attributes="0"/>
-                      <Component id="panelMapa" alignment="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="panelMapa" alignment="0" pref="433" max="32767" attributes="0"/>
                       <Component id="panelInformacionRuta" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -67,8 +67,8 @@
                   <Component id="panelInformacionRuta" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnEnviarSolicitud1" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="btnEnviarSolicitud" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnVolverMenu" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnContactarRepa" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="22" max="32767" attributes="0"/>
               </Group>
@@ -224,7 +224,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btnEnviarSolicitud">
+        <Component class="javax.swing.JButton" name="btnContactarRepa">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="66" red="ff" type="rgb"/>
@@ -238,10 +238,10 @@
             <Property name="text" type="java.lang.String" value="Contactar Repartidor"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarSolicitudActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnContactarRepaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnEnviarSolicitud1">
+        <Component class="javax.swing.JButton" name="btnVolverMenu">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="66" red="ff" type="rgb"/>
@@ -255,7 +255,7 @@
             <Property name="text" type="java.lang.String" value="Volver al menu"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarSolicitud1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVolverMenuActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

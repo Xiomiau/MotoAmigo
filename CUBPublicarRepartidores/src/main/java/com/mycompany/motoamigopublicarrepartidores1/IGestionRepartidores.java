@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package mx.itson.motoamigo.publicarrepartidores.negocio;
+package com.mycompany.motoamigopublicarrepartidores1;
 
+import com.mycompany.motoamigodto.RepartidorDTO;
+import com.mycompany.motoamigodto.SolicitudEntregaDTO;
 import java.util.List;
-import mx.itson.motoamigo.publicarrepartidores.dto.RepartidorDTO;
-import mx.itson.motoamigo.publicarrepartidores.dto.SolicitudEntregaDTO;
 
 /**
  *

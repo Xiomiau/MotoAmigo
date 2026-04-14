@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.motoamigoregistrarincidentePresentacion;
-
-import com.mycompany.motoamigoregistrarincidenteControl.ControlRegistrarIncidente;
-import com.mycompany.motoamigoregistrarincidenteDTO.EntregaDTO;
+package com.mycompany.motoamigopresentacion;
+import controladores.ControlRegistrarIncidente;
+import com.mycompany.motoamigodto.EntregaDTO;
 
 /**
  *
