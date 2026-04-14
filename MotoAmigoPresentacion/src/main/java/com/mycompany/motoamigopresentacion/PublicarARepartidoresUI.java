@@ -12,12 +12,12 @@ import controladores.ControlPublicarRepartidores;
  *
  * @author xiomi
  */
-public class PublicarRepartidoresUI extends javax.swing.JFrame {
+public class PublicarARepartidoresUI extends javax.swing.JFrame {
 
     private ControlPublicarRepartidores control = new ControlPublicarRepartidores();
     private SolicitudEntregaDTO solicitud;
 
-    public PublicarRepartidoresUI() {
+    public PublicarARepartidoresUI() {
         initComponents();
         //cargarSolicitud(SolicitudEntregaDTO solicitud);
     }
@@ -257,22 +257,23 @@ public class PublicarRepartidoresUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PublicarRepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new PublicarRepartidoresUI().setVisible(true);
+                //new PublicarARepartidoresUI().setVisible(true);
 
-                PublicarRepartidoresUI frame = new PublicarRepartidoresUI();
+                PublicarARepartidoresUI frame = new PublicarARepartidoresUI();
 
                 SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
                         // origen

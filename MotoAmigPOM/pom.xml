@@ -9,12 +9,11 @@
         <module>../MotoAmigoDto</module>
         <module>../MotoAmigoPersistencia</module>
         <module>../MotoAmigoNegocio</module>
-        <module>../MotoAmigoPresentacion</module>
-        <module>../../../NetBeansProjects/MotoAmigoRegistrarIncidente</module>
-        <module>../MotoAmigoRegistrarIncidente</module>
-        <module>../CUBSeguimientoTiempoReal</module>
-        <module>../CUBPublicarRepartidores</module>
         <module>../CUBCalculoRuta</module>
+        <module>../CUBPublicarRepartidores</module>
+        <module>../CUBRegistrarIncidente</module>
+        <module>../CUBSeguimientoTiempoReal</module>
+        <module>../MotoAmigoPresentacion</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

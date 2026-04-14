@@ -8,12 +8,8 @@ package controladores;
 import com.mycompany.motoamigodto.EntregaDTO;
 import com.mycompany.motoamigodto.IncidenteDTO;
 import com.mycompany.motoamigopresentacion.FrmDetallePedido;
-import com.mycompany.motoamigopresentacion.FrmDetallePedido;
-import com.mycompany.motoamigopresentacion.FrmEstadoReporte;
 import com.mycompany.motoamigopresentacion.FrmEstadoReporte;
 import com.mycompany.motoamigopresentacion.FrmFormularioIncidente;
-import com.mycompany.motoamigopresentacion.FrmFormularioIncidente;
-import com.mycompany.motoamigopresentacion.FrmNavegacion;
 import com.mycompany.motoamigopresentacion.FrmNavegacion;
 
 import javax.swing.JOptionPane;
