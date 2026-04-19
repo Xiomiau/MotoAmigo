@@ -9,8 +9,12 @@ import com.consultarruta.dtos.RutaResponseDTO;
 
 /**
  *
- * @author calo2
+ * @author Carmen Lara
  */
 public interface IRutaBO {
-     RutaResponseDTO calcularRuta(RutaRequestDTO request);
+   
+    /**
+     * Convierte el BO a un DTO de respuesta.
+     */
+    public abstract RutaResponseDTO toDTO();
 }

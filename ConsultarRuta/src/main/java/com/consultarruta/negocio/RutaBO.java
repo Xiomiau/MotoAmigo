@@ -15,46 +15,65 @@ import com.consultarruta.servicios.mapBox.IMapBoxService;
  */
 public class RutaBO implements IRutaBO {
 
-    private IMapBoxService mapbox;
+    private String origen;
+    private String destino;
+    private int tiempoEstimado;
+    private boolean rutaValida;
+    private double costo;
 
-    public RutaBO(IMapBoxService mapbox) {
-        this.mapbox = mapbox;
+    public RutaBO(String origen, String destino, int tiempoEstimado, boolean rutaValida, double costo) {
+        this.origen = origen;
+        this.destino = destino;
+        this.tiempoEstimado = tiempoEstimado;
+        this.rutaValida = rutaValida;
+        this.costo = costo;
     }
 
     @Override
-    public RutaResponseDTO calcularRuta(RutaRequestDTO dto){
-
-        if (dto.getDireccionRecoleccion() == null || dto.getDireccionRecoleccion().isEmpty()
-                || dto.getDireccionEntrega() == null || dto.getDireccionEntrega().isEmpty()) {
-
-            return new RutaResponseDTO(
-                    dto.getDireccionRecoleccion(),
-                    dto.getDireccionEntrega(),
-                    0,
-                    false,
-                    0
-            );
-        }
-
-        RutaResponseDTO ruta = mapbox.obtenerRuta(
-                dto.getDireccionRecoleccion(),
-                dto.getDireccionEntrega()
-        );
-
-        if (!ruta.isRutaValida()) {
-            return ruta;
-        }
-
-        double costoCalculado = calcularCosto(ruta.getTiempoEstimado());
-        ruta.setCosto(costoCalculado);
-        
-        return ruta;
+    public RutaResponseDTO toDTO() {
+        return new RutaResponseDTO(origen, destino, tiempoEstimado, rutaValida, costo);
     }
 
-    private double calcularCosto(int tiempoEstimado) {
-        double costoBase = 10.0;       // tarifa mínima
-        double tarifaMinuto = 1.0;     // costo por minuto
-
-        return costoBase + (tarifaMinuto * tiempoEstimado);
+    public String getOrigen() {
+        return origen;
     }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    public int getTiempoEstimado() {
+        return tiempoEstimado;
+    }
+
+    public void setTiempoEstimado(int tiempoEstimado) {
+        this.tiempoEstimado = tiempoEstimado;
+    }
+
+    public boolean isRutaValida() {
+        return rutaValida;
+    }
+
+    public void setRutaValida(boolean rutaValida) {
+        this.rutaValida = rutaValida;
+    }
+
+    public double getCosto() {
+        return costo;
+    }
+
+    public void setCosto(double costo) {
+        this.costo = costo;
+    }
+
+
 }
+

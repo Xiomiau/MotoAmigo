@@ -10,6 +10,9 @@ import com.consultarruta.dtos.RutaRequestDTO;
 import com.consultarruta.dtos.RutaResponseDTO;
 import com.consultarruta.negocio.IRutaBO;
 import com.consultarruta.negocio.RutaBO;
+import com.consultarruta.persistencia.IRutaDAO;
+import com.consultarruta.persistencia.RutaDAOMock;
+import com.consultarruta.servicios.mapBox.IMapBoxService;
 import com.consultarruta.servicios.mapBox.MapBoxMock;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +26,6 @@ import javax.swing.JPanel;
  *
  * @author calo2
  */
-
 public class ConsultarRutaFORM extends javax.swing.JFrame {
 
     private IConsultarRuta casoUso;
@@ -34,58 +36,65 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
     public ConsultarRutaFORM(RutaRequestDTO request) {
         initComponents();
         inicializarPanelMapa();
-        IRutaBO rutaBO = new RutaBO(new MapBoxMock());
-        casoUso = new ConsultarRuta(rutaBO);
 
-        RutaResponseDTO response = casoUso.consultarRuta(request);
+        // Instanciar DAO y servicio externo
+        IRutaDAO dao = new RutaDAOMock();
+        IMapBoxService mapbox = new MapBoxMock();
 
-        // Mostrar resultado en tus labels ya definidos en el form
+        // Crear el caso de uso con sus dependencias correctas
+        IConsultarRuta casoUso = new ConsultarRuta(dao, mapbox);
+
+        // Usar el método registrarRuta (no consultarRuta)
+        RutaResponseDTO response = casoUso.calcularRuta(request);
+
+        // Mostrar resultado en tus labels
         lblDistancia.setText(String.format("%.2f km", response.getDistancia()));
         lblETA.setText(response.getTiempoEstimado() + " min");
         lblCosto.setText("$" + String.format("%.2f MXN", response.getCosto()));
     }
 
-   private void inicializarPanelMapa() {
-    // Crear un panel personalizado que dibuje un mock
-    JPanel mapaMock = new JPanel() {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
+    private void inicializarPanelMapa() {
+        // Crear un panel personalizado que dibuje un mock
+        JPanel mapaMock = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
 
-            // Fondo gris claro
-            g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(0, 0, getWidth(), getHeight());
+                // Fondo gris claro
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(0, 0, getWidth(), getHeight());
 
-            // Simulación de ruta: línea azul
-            g.setColor(Color.BLUE);
-            g.drawLine(50, 50, getWidth() - 50, getHeight() - 50);
+                // Simulación de ruta: línea azul
+                g.setColor(Color.BLUE);
+                g.drawLine(50, 50, getWidth() - 50, getHeight() - 50);
 
-            // Puntos de origen y destino
-            g.setColor(Color.RED);
-            g.fillOval(45, 45, 12, 12); // origen
-            g.setColor(Color.BLACK);
-            g.fillOval(getWidth() - 60, getHeight() - 60, 12, 12); // destino
+                // Puntos de origen y destino
+                g.setColor(Color.RED);
+                g.fillOval(45, 45, 12, 12); // origen
+                g.setColor(Color.BLACK);
+                g.fillOval(getWidth() - 60, getHeight() - 60, 12, 12); // destino
 
-            // Texto placeholder
-            g.setColor(Color.DARK_GRAY);
-            g.setFont(new Font("Arial", Font.ITALIC, 14));
-            g.drawString("Mapa simulado", getWidth()/2 - 50, getHeight()/2);
-        }
-    };
+                // Texto placeholder
+                g.setColor(Color.DARK_GRAY);
+                g.setFont(new Font("Arial", Font.ITALIC, 14));
+                g.drawString("Mapa simulado", getWidth() / 2 - 50, getHeight() / 2);
+            }
+        };
 
-    // Ajustes visuales
-    mapaMock.setBorder(BorderFactory.createTitledBorder("Mapa de Ruta"));
-    mapaMock.setPreferredSize(new Dimension(400, 300));
+        // Ajustes visuales
+        mapaMock.setBorder(BorderFactory.createTitledBorder("Mapa de Ruta"));
+        mapaMock.setPreferredSize(new Dimension(400, 300));
 
-    // Reemplazar el panel del diseñador por este mock
-    panelMapa.removeAll();
-    panelMapa.setLayout(new BorderLayout());
-    panelMapa.add(mapaMock, BorderLayout.CENTER);
+        // Reemplazar el panel del diseñador por este mock
+        panelMapa.removeAll();
+        panelMapa.setLayout(new BorderLayout());
+        panelMapa.add(mapaMock, BorderLayout.CENTER);
 
-    // Refrescar
-    panelMapa.revalidate();
-    panelMapa.repaint();
-}
+        // Refrescar
+        panelMapa.revalidate();
+        panelMapa.repaint();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

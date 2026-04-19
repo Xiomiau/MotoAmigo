@@ -5,6 +5,7 @@
 package com.consultarruta.persistencia;
 
 import com.consultarruta.dtos.RutaResponseDTO;
+import java.util.List;
 
 /**
  *
@@ -13,5 +14,7 @@ import com.consultarruta.dtos.RutaResponseDTO;
 public interface IRutaDAO {
     
     Ruta guardarRuta(RutaResponseDTO ruta);
+    List<Ruta> consultarRutas();
 }
+
 
