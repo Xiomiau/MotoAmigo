@@ -12,5 +12,4 @@ public interface IMapBoxService {
     
     public abstract RutaResponseDTO obtenerRuta(String origen, String destino);
     public abstract UbicacionDTO obtenerSiguienteUbicacion();
-    boolean haTerminado();
 }

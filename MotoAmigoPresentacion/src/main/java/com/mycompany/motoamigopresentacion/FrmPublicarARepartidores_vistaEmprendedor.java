@@ -1,30 +1,24 @@
-
 package com.mycompany.motoamigopresentacion;
 
+import com.mycompany.motoamigodto.RutaRequestDTO;
+import com.mycompany.motoamigodto.SolicitudEntregaDTO;
 import javax.swing.JOptionPane;
 import controladores.ControlPublicarRepartidores;
-import com.mycompany.motoamigodto.SolicitudEntregaDTO;
 
 /**
  *
  * @author xiomi
  */
-public class PublicarARepartidoresUI_vistaEmprendedor extends javax.swing.JFrame {
+public class FrmPublicarARepartidores_vistaEmprendedor extends javax.swing.JFrame {
 
     private ControlPublicarRepartidores control = new ControlPublicarRepartidores();
-    private SolicitudEntregaDTO solicitudMock;
 
-    public PublicarARepartidoresUI_vistaEmprendedor() {
+    public FrmPublicarARepartidores_vistaEmprendedor() {
         initComponents();
     }
 
-    public void cargarSolicitud(SolicitudEntregaDTO solicitud) {
-        this.solicitudMock = solicitud;
+    public void cargarSolicitud() {
 
-        txt_origen.setText(solicitud.getOrigen());
-        txt_destino.setText(solicitud.getDestino());
-        txt_tipoPaquete.setText(solicitud.getTipoPaquete());
-        txt_peso.setText(String.valueOf(solicitud.getPesoAprox()));
     }
 
     /**
@@ -154,82 +148,42 @@ public class PublicarARepartidoresUI_vistaEmprendedor extends javax.swing.JFrame
 
     private void btn_solicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_solicitarActionPerformed
         // TODO add your handling code here:
-
+        SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
+                // origen
+                "Reforma 123",
+                // destino
+                "Polanco 45",
+                // tipoPaquete
+                "Caja",
+                // pesoAprox
+                2.5,
+                // idEmprendedor
+                1,
+                // idEnvio
+                101,
+                // estado
+                "pendiente",
+                // distancia
+                3.2
+        );
         boolean resultado = control.publicarSolicitud(solicitudMock);
-    
-    if (resultado) {
-        PublicarARepartidoresUI vistaRepartidor = new PublicarARepartidoresUI();
-        vistaRepartidor.cargarSolicitud(solicitudMock);
-        vistaRepartidor.setVisible(true);
-        dispose();
-    } else {
-        JOptionPane.showMessageDialog(this,
-            "No se pudo publicar la solicitud. Intenta de nuevo.",
-            "Error", JOptionPane.ERROR_MESSAGE);
-    }
+
+        if (resultado) {
+
+            RutaRequestDTO mockRequest = new RutaRequestDTO(
+                    "Av. Universidad 123, Ciudad Obregón",
+                    "Calle Morelos 456, Ciudad Obregón"
+            );
+            FrmConsultarRuta frame = new FrmConsultarRuta(mockRequest);
+            frame.setVisible(resultado);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo publicar la solicitud. Intenta de nuevo.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_solicitarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaEmprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaEmprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaEmprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI_vistaEmprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new PublicarARepartidoresUI_vistaEmprendedor().setVisible(true);
-
-                PublicarARepartidoresUI_vistaEmprendedor frame = new PublicarARepartidoresUI_vistaEmprendedor();
-
-                SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
-                        // origen
-                        "Reforma 123",
-                        // destino
-                        "Polanco 45",
-                        // tipoPaquete
-                        "Caja",
-                        // pesoAprox
-                        2.5,
-                        // idEmprendedor
-                        1,
-                        // idEnvio
-                        101,
-                        // estado
-                        "pendiente",
-                        // distancia
-                        3.2
-                );
-
-                frame.cargarSolicitud(solicitudMock);
-                frame.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_solicitar;

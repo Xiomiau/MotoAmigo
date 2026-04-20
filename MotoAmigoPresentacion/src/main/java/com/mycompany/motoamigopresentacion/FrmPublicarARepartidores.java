@@ -12,12 +12,12 @@ import controladores.ControlPublicarRepartidores;
  *
  * @author xiomi
  */
-public class PublicarARepartidoresUI extends javax.swing.JFrame {
+public class FrmPublicarARepartidores extends javax.swing.JFrame {
 
     private ControlPublicarRepartidores control = new ControlPublicarRepartidores();
     private SolicitudEntregaDTO solicitud;
 
-    public PublicarARepartidoresUI() {
+    public FrmPublicarARepartidores() {
         initComponents();
         //cargarSolicitud(SolicitudEntregaDTO solicitud);
     }
@@ -257,23 +257,25 @@ public class PublicarARepartidoresUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PublicarARepartidoresUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new PublicarARepartidoresUI().setVisible(true);
+                //new FrmPublicarARepartidores().setVisible(true);
 
-                PublicarARepartidoresUI frame = new PublicarARepartidoresUI();
+                FrmPublicarARepartidores frame = new FrmPublicarARepartidores();
 
                 SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
                         // origen

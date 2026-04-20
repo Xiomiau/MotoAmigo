@@ -10,7 +10,7 @@ import com.mycompany.motoamigodto.IncidenteDTO;
 import com.mycompany.motoamigopresentacion.FrmDetallePedido;
 import com.mycompany.motoamigopresentacion.FrmEstadoReporte;
 import com.mycompany.motoamigopresentacion.FrmFormularioIncidente;
-import com.mycompany.motoamigopresentacion.FrmNavegacion;
+import com.mycompany.motoamigopresentacion.FrmSeguimientoEnTiempoReal;
 
 import javax.swing.JOptionPane;
 
@@ -22,7 +22,7 @@ public class ControlRegistrarIncidente {
 
     // Instancias de tus ventanas
     private FrmDetallePedido frmDetalle;
-    private FrmNavegacion frmNavegacion;
+    private FrmSeguimientoEnTiempoReal frmNavegacion;
     private FrmFormularioIncidente frmFormulario;
     private FrmEstadoReporte frmEstado;
 
@@ -45,8 +45,8 @@ public class ControlRegistrarIncidente {
         entregaActual.setEstadoEntrega("EN CURSO");
         frmDetalle.dispose(); // Cierra ventana 1
         
-        frmNavegacion = new FrmNavegacion(this, entregaActual);
-        frmNavegacion.setVisible(true); // Abre ventana 2
+        frmNavegacion = new FrmSeguimientoEnTiempoReal();
+        frmNavegacion.setVisible(true); 
     }
 
     // 3. Transición cuando da clic en "Reportar"

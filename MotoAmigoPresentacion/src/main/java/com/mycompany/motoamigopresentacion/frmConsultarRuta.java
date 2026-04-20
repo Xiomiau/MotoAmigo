@@ -24,14 +24,14 @@ import javax.swing.JPanel;
  * @author calo2
  */
 
-public class ConsultarRutaFORM extends javax.swing.JFrame {
+public class FrmConsultarRuta extends javax.swing.JFrame {
 
     private IConsultarRuta casoUso;
 
     /**
      * Creates new form ConsultarRutaFORM
      */
-    public ConsultarRutaFORM(RutaRequestDTO request) {
+    public FrmConsultarRuta(RutaRequestDTO request) {
         initComponents();
         inicializarPanelMapa();
         IRutaBO rutaBO = new RutaBO(new MapBoxMock());
@@ -280,28 +280,13 @@ public class ConsultarRutaFORM extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
-       new SeguimientoEnTiempoReal().setVisible(true);
+       new FrmSeguimientoEnTiempoReal().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
 
     private void btnCancelarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSolicitudActionPerformed
        this.dispose();
     }//GEN-LAST:event_btnCancelarSolicitudActionPerformed
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // Crear un mock del request (simulando que viene de otra pantalla)
-        RutaRequestDTO mockRequest = new RutaRequestDTO(
-                "Av. Universidad 123, Ciudad Obregón",
-                "Calle Morelos 456, Ciudad Obregón"
-        );
-        
-        // Abrir el formulario con el request mockeado
-        java.awt.EventQueue.invokeLater(() -> {
-            new ConsultarRutaFORM(mockRequest).setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarSolicitud;

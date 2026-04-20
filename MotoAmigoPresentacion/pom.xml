@@ -56,7 +56,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
-        <exec.mainClass>com.mycompany.motoamigopresentacion.MotoAmigoPresentacion</exec.mainClass>
+        <exec.mainClass>com.mycompany.motoamigopresentacion.Main</exec.mainClass>
     </properties>
     <build>
         <plugins>
@@ -65,7 +65,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>tu.paquete.TuClaseMain</mainClass>
+                    <mainClass>com.mycompany.motoamigopresentacion.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

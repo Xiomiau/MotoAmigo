@@ -4,10 +4,12 @@
  */
 package com.mycompany.motoamigopresentacion;
 
+import com.consultarruta.servicios.mapBox.IMapBoxService;
 import com.consultarruta.servicios.mapBox.MapBoxMock;
 import com.mycompany.motoamigodto.UbicacionDTO;
 import com.mycompany.motoamigoseguimientotiemporeal.FuncionalidadSeguimiento;
 import com.mycompany.motoamigoseguimientotiemporeal.IFuncionalidadSeguimiento;
+import controladores.ControlRegistrarIncidente;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javafx.application.Platform;
@@ -21,15 +23,18 @@ import javax.swing.Timer;
  *
  * @author joset
  */
-public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
+public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
 
     private WebView webView;
     private boolean mapaListo = false;
     private final IFuncionalidadSeguimiento funcionalidad;
+    private ControlRegistrarIncidente control;
 
-    public SeguimientoEnTiempoReal() {
+    public FrmSeguimientoEnTiempoReal() {
+        this.control = new ControlRegistrarIncidente();
         initComponents();
-        this.funcionalidad = new FuncionalidadSeguimiento(new MapBoxMock());
+        IMapBoxService servicio = new MapBoxMock();
+        this.funcionalidad = new FuncionalidadSeguimiento(servicio);
         txtSeguimiento.setEditable(false);
         inicializarMapa();
         setLocationRelativeTo(null);
@@ -44,19 +49,19 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
      */
     private void inicializarMapa() {
         JFXPanel jfxPanel = new JFXPanel();
-        jfxPanel.setPreferredSize(new Dimension(600, 450));
-        jfxPanel.setMinimumSize(new Dimension(600, 450));
-        jfxPanel.setMaximumSize(new Dimension(600, 450));
+        jfxPanel.setPreferredSize(new Dimension(1000, 450));
+        jfxPanel.setMinimumSize(new Dimension(1000, 450));
+        jfxPanel.setMaximumSize(new Dimension(1000, 450));
         panelMapa.setLayout(new BorderLayout());
         panelMapa.add(jfxPanel, BorderLayout.CENTER);
 
         Platform.runLater(() -> {
             webView = new WebView();
-            webView.setPrefWidth(600);
+            webView.setPrefWidth(1000);
             webView.setPrefHeight(450);
-            webView.setMinWidth(600);
+            webView.setMinWidth(1000);
             webView.setMinHeight(450);
-            webView.setMaxWidth(600);
+            webView.setMaxWidth(1000);
             webView.setMaxHeight(450);
 
             webView.getEngine().load(getClass().getResource("/mapa.html").toExternalForm());
@@ -70,7 +75,7 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 }
             });
 
-            Scene scene = new Scene(webView, 600, 450);
+            Scene scene = new Scene(webView, 1000, 450);
             jfxPanel.setScene(scene);
         });
     }
@@ -87,7 +92,8 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
         timer.addActionListener(e -> {
             if (funcionalidad.haTerminado()) {
                 timer.stop();
-                lblEstado.setText("Estado: Entregado ✓");
+                lblEstado.setText("Estado: Entregado ");
+                txtSeguimiento.append("Pedido entregado\n");
                 return;
             }
             UbicacionDTO ubi = funcionalidad.obtenerSiguienteUbicacion();
@@ -95,11 +101,15 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
             txtSeguimiento.append("[" + java.time.LocalTime.now().withNano(0) + "] "
                     + ubi.getDescripcion() + "\n");
             if (mapaListo && webView != null) {
-                Platform.runLater(()
-                        -> webView.getEngine().executeScript(
+                Platform.runLater(() -> {
+                    try {
+                        webView.getEngine().executeScript(
                                 "mover(" + ubi.getLatitud() + "," + ubi.getLongitud() + ")"
-                        )
-                );
+                        );
+                    } catch (Exception ex) {
+                        System.out.println("Error JS: " + ex.getMessage());
+                    }
+                });
             }
         });
         timer.start();
@@ -125,8 +135,11 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
         txtSeguimiento = new javax.swing.JTextArea();
         btnContactarRepa = new javax.swing.JButton();
         btnVolverMenu = new javax.swing.JButton();
+        btnReportar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1000, 732));
+        setResizable(false);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -162,6 +175,7 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
+        panelMapa.setBackground(new java.awt.Color(255, 255, 255));
         panelMapa.setMaximumSize(new java.awt.Dimension(600, 450));
         panelMapa.setMinimumSize(new java.awt.Dimension(600, 450));
         panelMapa.setPreferredSize(new java.awt.Dimension(600, 450));
@@ -174,7 +188,7 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
         );
         panelMapaLayout.setVerticalGroup(
             panelMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 450, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         lblEstado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -195,7 +209,7 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addGroup(panelInformacionRutaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelInformacionRutaLayout.createSequentialGroup()
                         .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 358, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -229,23 +243,34 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
             }
         });
 
+        btnReportar.setBackground(new java.awt.Color(204, 0, 51));
+        btnReportar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnReportar.setForeground(new java.awt.Color(255, 255, 255));
+        btnReportar.setText("Reportar");
+        btnReportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+            .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(228, 228, 228)
                         .addComponent(btnContactarRepa)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnVolverMenu)
-                        .addGap(10, 10, 10))
-                    .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelMapa, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 433, Short.MAX_VALUE)
-                    .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(99, 99, 99)
+                        .addComponent(btnVolverMenu))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(306, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,14 +278,16 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnContactarRepa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnContactarRepa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -282,9 +309,14 @@ public class SeguimientoEnTiempoReal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnVolverMenuActionPerformed
 
+    private void btnReportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportarActionPerformed
+        control.irAFormularioIncidente();
+    }//GEN-LAST:event_btnReportarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContactarRepa;
+    private javax.swing.JButton btnReportar;
     private javax.swing.JButton btnVolverMenu;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
