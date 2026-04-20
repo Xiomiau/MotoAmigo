@@ -18,13 +18,16 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import org.netbeans.lib.awtextra.AbsoluteConstraints;
+import panelesUtilerias.PanelHeader;
 
 /**
  *
  * @author joset
  */
 public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
-
+    private PanelHeader panelHeader;
+    
     private WebView webView;
     private boolean mapaListo = false;
     private final IFuncionalidadSeguimiento funcionalidad;
@@ -33,6 +36,9 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     public FrmSeguimientoEnTiempoReal() {
         this.control = new ControlRegistrarIncidente();
         initComponents();
+        panelHeader = new PanelHeader();
+
+        panPrincipal.add(panelHeader, new AbsoluteConstraints(0, 0, 1366, 130));
         IMapBoxService servicio = new MapBoxMock();
         this.funcionalidad = new FuncionalidadSeguimiento(servicio);
         txtSeguimiento.setEditable(false);
@@ -124,7 +130,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
+        panPrincipal = new javax.swing.JPanel();
         panelSuperior = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -141,7 +147,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(1000, 732));
         setResizable(false);
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        panPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
         panelSuperior.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -172,7 +178,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         panelMapa.setBackground(new java.awt.Color(255, 255, 255));
@@ -253,29 +259,28 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panPrincipalLayout = new javax.swing.GroupLayout(panPrincipal);
+        panPrincipal.setLayout(panPrincipalLayout);
+        panPrincipalLayout.setHorizontalGroup(
+            panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(panPrincipalLayout.createSequentialGroup()
+                .addGroup(panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panPrincipalLayout.createSequentialGroup()
                         .addGap(228, 228, 228)
                         .addComponent(btnContactarRepa)
                         .addGap(99, 99, 99)
                         .addComponent(btnVolverMenu))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(panPrincipalLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(306, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+        panPrincipalLayout.setVerticalGroup(
+            panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panPrincipalLayout.createSequentialGroup()
                 .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -284,13 +289,13 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnContactarRepa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
+        getContentPane().add(panPrincipal, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -312,7 +317,19 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     private void btnReportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportarActionPerformed
         control.irAFormularioIncidente();
     }//GEN-LAST:event_btnReportarActionPerformed
+    
+    
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        
 
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FrmSeguimientoEnTiempoReal().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContactarRepa;
@@ -320,9 +337,9 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     private javax.swing.JButton btnVolverMenu;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblEstado;
+    private javax.swing.JPanel panPrincipal;
     private javax.swing.JPanel panelInformacionRuta;
     private javax.swing.JPanel panelMapa;
     private javax.swing.JPanel panelSuperior;
