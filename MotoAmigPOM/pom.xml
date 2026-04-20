@@ -9,10 +9,7 @@
         <module>../MotoAmigoDto</module>
         <module>../MotoAmigoPersistencia</module>
         <module>../MotoAmigoNegocio</module>
-        <module>../CUBCalculoRuta</module>
-        <module>../CUBPublicarRepartidores</module>
-        <module>../CUBRegistrarIncidente</module>
-        <module>../CUBSeguimientoTiempoReal</module>
+        <module>../CUSolicitarEntrega</module>
         <module>../MotoAmigoPresentacion</module>
     </modules>
     <properties>
