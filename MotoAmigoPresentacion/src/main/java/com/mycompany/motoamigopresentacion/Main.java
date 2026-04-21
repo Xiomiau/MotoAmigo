@@ -11,8 +11,8 @@ package com.mycompany.motoamigopresentacion;
 public class Main {
     public static void main(String[] args) {
         
-        System.setProperty("prism.allowhidpi", "false");
-        System.setProperty("sun.java2d.uiScale", "1.0");
+        
+        System.setProperty("https.agent", "MotoAmigo/1.0 (student project)");
         
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -24,7 +24,7 @@ public class Main {
         } catch (Exception e) {
             System.out.println("No se pudo aplicar Nimbus");
         }
-        
+
         java.awt.EventQueue.invokeLater(() -> {
             new FrmPublicarARepartidores_vistaEmprendedor().setVisible(true);
         });

@@ -4,6 +4,7 @@
  */
 package com.mycompany.motoamigopresentacion;
 
+import Utilerias.OSMTileFactoryCustom;
 import Utilerias.utileriasBotones;
 import com.consultarruta.servicios.mapBox.MapBoxMock;
 import com.mycompany.cusolicitarentrega.FuncionalidadSeguimiento;
@@ -11,15 +12,17 @@ import com.mycompany.cusolicitarentrega.IFuncionalidadSeguimiento;
 import com.mycompany.motoamigodto.UbicacionDTO;
 import controladores.ControlRegistrarIncidente;
 import java.awt.BorderLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.time.LocalTime;
-import javafx.application.Platform;
-import javafx.concurrent.Worker;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.web.WebView;
+import java.util.Arrays;
+import java.util.HashSet;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.viewer.DefaultWaypoint;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.WaypointPainter;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import panelesUtilerias.PanelHeader;
 
@@ -29,10 +32,10 @@ import panelesUtilerias.PanelHeader;
  */
 public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
 
-    private volatile boolean mapaListo = false;
-    private volatile WebView webView;
+    private JXMapViewer mapViewer;
+    private WaypointPainter<DefaultWaypoint> waypointPainter;
+    private DefaultWaypoint marcador;
 
-    private PanelHeader panelHeader;
     private final IFuncionalidadSeguimiento funcionalidad;
     private ControlRegistrarIncidente control;
 
@@ -54,49 +57,45 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         utileriasBotones.btnRojo(btnReportar);
         panPrincipal.add(new PanelHeader(), new AbsoluteConstraints(0, 0, 1366, 130));
         txtSeguimiento.setEditable(false);
+
+    }
+
+    private void inicializarMapa() {
+        mapViewer = new JXMapViewer();
+
+        OSMTileFactoryCustom tileFactory = new OSMTileFactoryCustom();
+        tileFactory.setThreadPoolSize(4);
+        mapViewer.setTileFactory(tileFactory);
+
+        GeoPosition posicionInicial = new GeoPosition(27.486, -109.939);
+        mapViewer.setZoom(7);
+        mapViewer.setAddressLocation(posicionInicial);
+
+        marcador = new DefaultWaypoint(posicionInicial);
+        waypointPainter = new WaypointPainter<>();
+        waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(marcador)));
+        mapViewer.setOverlayPainter(waypointPainter);
+
+        panelMapa.setLayout(new BorderLayout());
+        panelMapa.add(mapViewer, BorderLayout.CENTER);
+        panelMapa.revalidate();
+        panelMapa.repaint();
+        agregarInteraccionMapa();
+        iniciarSeguimiento();
     }
 
     /**
-     * Inicializa el panel donde se va a poner el mapa usando JFXPanel con un
-     * WebView de JavaFX. Carga el archivo mapa.html dentro del WebView. ya que
-     * el mapa se termina de cargar, hace que se recalcule el tamaño con
-     * invalidateSize() en el html y de ahi comienza el seguimiento del
-     * repartidor.
+     * Agrega zoom con rueda del mouse y desplazamiento con arrastre al mapa.
      */
-    private void inicializarMapa() {
-        JFXPanel jfxPanel = new JFXPanel();
-        panelMapa.setLayout(new BorderLayout());
-        panelMapa.add(jfxPanel, BorderLayout.CENTER);
-        panelMapa.revalidate();
-
-        Platform.runLater(() -> {
-            webView = new WebView();
-            webView.getEngine().load(
-                    getClass().getResource("/mapa.html").toExternalForm()
-            );
-            webView.getEngine().getLoadWorker().stateProperty().addListener(
-                    (obs, oldState, newState) -> {
-                        if (newState == Worker.State.SUCCEEDED) {
-                            SwingUtilities.invokeLater(() -> {
-                                int w = panelMapa.getWidth();
-                                int h = panelMapa.getHeight();
-                                System.out.println("Panel size: " + w + "x" + h); 
-
-                                Platform.runLater(() -> {
-                                    webView.getEngine().executeScript(
-                                            "document.getElementById('map').style.width = '" + w + "px';"
-                                            + "document.getElementById('map').style.height = '" + h + "px';"
-                                            + "map.invalidateSize(true);"
-                                    );
-                                });
-
-                                mapaListo = true;
-                                iniciarSeguimiento();
-                            });
-                        }
-                    }
-            );
-            jfxPanel.setScene(new Scene(webView));
+    private void agregarInteraccionMapa() {
+        // Zoom con rueda del mouse
+        mapViewer.addMouseWheelListener(e -> {
+            int zoom = mapViewer.getZoom();
+            if (e.getWheelRotation() < 0) {
+                mapViewer.setZoom(Math.max(1, zoom - 1));
+            } else {
+                mapViewer.setZoom(Math.min(15, zoom + 1));
+            }
         });
     }
 
@@ -113,7 +112,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
             if (funcionalidad.haTerminado()) {
                 timer.stop();
                 lblEstado.setText("Estado: Entregado");
-                txtSeguimiento.append("✓ Pedido entregado\n");
+                txtSeguimiento.append(" Pedido entregado\n");
                 return;
             }
 
@@ -130,23 +129,19 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     }
 
     /**
-     * Mueve el marcador en el mapa al hilo de JavaFX. Solo actúa si el mapa ya
-     * terminó de cargar.
+     * Mueve el marcador en el mapa al hilo de. Solo actúa si el mapa ya terminó
+     * de cargar.
      */
     private void moverMarcador(UbicacionDTO ubi) {
-        if (!mapaListo || webView == null) {
+        if (mapViewer == null) {
             return;
         }
 
-        Platform.runLater(() -> {
-            try {
-                webView.getEngine().executeScript(
-                        "mover(" + ubi.getLatitud() + "," + ubi.getLongitud() + ")"
-                );
-            } catch (Exception ex) {
-                System.err.println("Error al mover marcador en mapa: " + ex.getMessage());
-            }
-        });
+        GeoPosition nuevaPos = new GeoPosition(ubi.getLatitud(), ubi.getLongitud());
+        marcador = new DefaultWaypoint(nuevaPos);
+        waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(marcador)));
+        mapViewer.setAddressLocation(nuevaPos);
+        mapViewer.repaint();
     }
 
     /**
@@ -210,9 +205,11 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         );
 
         panelMapa.setBackground(new java.awt.Color(255, 255, 255));
-        panelMapa.setMaximumSize(new java.awt.Dimension(600, 450));
-        panelMapa.setMinimumSize(new java.awt.Dimension(600, 450));
-        panelMapa.setPreferredSize(new java.awt.Dimension(600, 450));
+        panelMapa.setInheritsPopupMenu(true);
+        panelMapa.setMaximumSize(new java.awt.Dimension(1008, 438));
+        panelMapa.setMinimumSize(new java.awt.Dimension(1008, 438));
+        panelMapa.setName(""); // NOI18N
+        panelMapa.setPreferredSize(new java.awt.Dimension(1008, 438));
 
         javax.swing.GroupLayout panelMapaLayout = new javax.swing.GroupLayout(panelMapa);
         panelMapa.setLayout(panelMapaLayout);
@@ -222,7 +219,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         );
         panelMapaLayout.setVerticalGroup(
             panelMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 438, Short.MAX_VALUE)
         );
 
         lblEstado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -293,7 +290,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
             panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+            .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panPrincipalLayout.createSequentialGroup()
                 .addGroup(panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panPrincipalLayout.createSequentialGroup()
@@ -304,14 +301,14 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
                     .addGroup(panPrincipalLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(306, Short.MAX_VALUE))
+                .addContainerGap(314, Short.MAX_VALUE))
         );
         panPrincipalLayout.setVerticalGroup(
             panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panPrincipalLayout.createSequentialGroup()
                 .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
