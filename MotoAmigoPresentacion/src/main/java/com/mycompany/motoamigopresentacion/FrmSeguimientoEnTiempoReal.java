@@ -4,19 +4,21 @@
  */
 package com.mycompany.motoamigopresentacion;
 
-import com.consultarruta.servicios.mapBox.IMapBoxService;
+import Utilerias.utileriasBotones;
 import com.consultarruta.servicios.mapBox.MapBoxMock;
+import com.mycompany.cusolicitarentrega.FuncionalidadSeguimiento;
+import com.mycompany.cusolicitarentrega.IFuncionalidadSeguimiento;
 import com.mycompany.motoamigodto.UbicacionDTO;
-import com.mycompany.motoamigoseguimientotiemporeal.FuncionalidadSeguimiento;
-import com.mycompany.motoamigoseguimientotiemporeal.IFuncionalidadSeguimiento;
 import controladores.ControlRegistrarIncidente;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.time.LocalTime;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import panelesUtilerias.PanelHeader;
@@ -26,24 +28,32 @@ import panelesUtilerias.PanelHeader;
  * @author joset
  */
 public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
+
+    private volatile boolean mapaListo = false;
+    private volatile WebView webView;
+
     private PanelHeader panelHeader;
-    
-    private WebView webView;
-    private boolean mapaListo = false;
     private final IFuncionalidadSeguimiento funcionalidad;
     private ControlRegistrarIncidente control;
 
     public FrmSeguimientoEnTiempoReal() {
         this.control = new ControlRegistrarIncidente();
+        this.funcionalidad = new FuncionalidadSeguimiento(new MapBoxMock());
         initComponents();
-        panelHeader = new PanelHeader();
-
-        panPrincipal.add(panelHeader, new AbsoluteConstraints(0, 0, 1366, 130));
-        IMapBoxService servicio = new MapBoxMock();
-        this.funcionalidad = new FuncionalidadSeguimiento(servicio);
-        txtSeguimiento.setEditable(false);
+        inicializarUI();
         inicializarMapa();
         setLocationRelativeTo(null);
+    }
+
+    /**
+     * Aplica estilos visuales de los componentes.
+     */
+    private void inicializarUI() {
+        utileriasBotones.btnNaranja(btnContactarRepa);
+        utileriasBotones.btnNaranja(btnVolverMenu);
+        utileriasBotones.btnRojo(btnReportar);
+        panPrincipal.add(new PanelHeader(), new AbsoluteConstraints(0, 0, 1366, 130));
+        txtSeguimiento.setEditable(false);
     }
 
     /**
@@ -55,34 +65,38 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
      */
     private void inicializarMapa() {
         JFXPanel jfxPanel = new JFXPanel();
-        jfxPanel.setPreferredSize(new Dimension(1000, 450));
-        jfxPanel.setMinimumSize(new Dimension(1000, 450));
-        jfxPanel.setMaximumSize(new Dimension(1000, 450));
         panelMapa.setLayout(new BorderLayout());
         panelMapa.add(jfxPanel, BorderLayout.CENTER);
+        panelMapa.revalidate();
 
         Platform.runLater(() -> {
             webView = new WebView();
-            webView.setPrefWidth(1000);
-            webView.setPrefHeight(450);
-            webView.setMinWidth(1000);
-            webView.setMinHeight(450);
-            webView.setMaxWidth(1000);
-            webView.setMaxHeight(450);
+            webView.getEngine().load(
+                    getClass().getResource("/mapa.html").toExternalForm()
+            );
+            webView.getEngine().getLoadWorker().stateProperty().addListener(
+                    (obs, oldState, newState) -> {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            SwingUtilities.invokeLater(() -> {
+                                int w = panelMapa.getWidth();
+                                int h = panelMapa.getHeight();
+                                System.out.println("Panel size: " + w + "x" + h); 
 
-            webView.getEngine().load(getClass().getResource("/mapa.html").toExternalForm());
-            webView.getEngine().getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-                if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
-                    Platform.runLater(() -> {
-                        webView.getEngine().executeScript("map.invalidateSize(true)"); // hace que recalcule el tamaño dl contenedor
-                    });
-                    mapaListo = true;
-                    iniciarSeguimiento();
-                }
-            });
+                                Platform.runLater(() -> {
+                                    webView.getEngine().executeScript(
+                                            "document.getElementById('map').style.width = '" + w + "px';"
+                                            + "document.getElementById('map').style.height = '" + h + "px';"
+                                            + "map.invalidateSize(true);"
+                                    );
+                                });
 
-            Scene scene = new Scene(webView, 1000, 450);
-            jfxPanel.setScene(scene);
+                                mapaListo = true;
+                                iniciarSeguimiento();
+                            });
+                        }
+                    }
+            );
+            jfxPanel.setScene(new Scene(webView));
         });
     }
 
@@ -90,35 +104,49 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
      * Crea temporizador que cada 3 segundos consulta la siguiente ubicación del
      * repartidor usando el modulo de funcionalidad. Actualiza el estado y el
      * historial de texto y mueve el marcador en el mapa usando mover(lat, lng)
-     * .
      *
      */
     private void iniciarSeguimiento() {
         Timer timer = new Timer(3000, null);
+
         timer.addActionListener(e -> {
             if (funcionalidad.haTerminado()) {
                 timer.stop();
-                lblEstado.setText("Estado: Entregado ");
-                txtSeguimiento.append("Pedido entregado\n");
+                lblEstado.setText("Estado: Entregado");
+                txtSeguimiento.append("✓ Pedido entregado\n");
                 return;
             }
-            UbicacionDTO ubi = funcionalidad.obtenerSiguienteUbicacion();
+
+            UbicacionDTO ubi = funcionalidad.obtenerSiguiente();
+
             lblEstado.setText("Estado: " + ubi.getDescripcion());
-            txtSeguimiento.append("[" + java.time.LocalTime.now().withNano(0) + "] "
+            txtSeguimiento.append("[" + LocalTime.now().withNano(0) + "] "
                     + ubi.getDescripcion() + "\n");
-            if (mapaListo && webView != null) {
-                Platform.runLater(() -> {
-                    try {
-                        webView.getEngine().executeScript(
-                                "mover(" + ubi.getLatitud() + "," + ubi.getLongitud() + ")"
-                        );
-                    } catch (Exception ex) {
-                        System.out.println("Error JS: " + ex.getMessage());
-                    }
-                });
+
+            moverMarcador(ubi);
+        });
+
+        timer.start();
+    }
+
+    /**
+     * Mueve el marcador en el mapa al hilo de JavaFX. Solo actúa si el mapa ya
+     * terminó de cargar.
+     */
+    private void moverMarcador(UbicacionDTO ubi) {
+        if (!mapaListo || webView == null) {
+            return;
+        }
+
+        Platform.runLater(() -> {
+            try {
+                webView.getEngine().executeScript(
+                        "mover(" + ubi.getLatitud() + "," + ubi.getLongitud() + ")"
+                );
+            } catch (Exception ex) {
+                System.err.println("Error al mover marcador en mapa: " + ex.getMessage());
             }
         });
-        timer.start();
     }
 
     /**
@@ -317,13 +345,12 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     private void btnReportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportarActionPerformed
         control.irAFormularioIncidente();
     }//GEN-LAST:event_btnReportarActionPerformed
-    
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        
 
-        /* Create and display the form */
+
+ /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrmSeguimientoEnTiempoReal().setVisible(true);

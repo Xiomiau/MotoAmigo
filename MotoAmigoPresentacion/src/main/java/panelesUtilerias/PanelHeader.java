@@ -69,14 +69,8 @@ public class PanelHeader extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel panelSuperior;
-    private javax.swing.JPanel panelSuperior1;
     private javax.swing.JPanel panelSuperior2;
     // End of variables declaration//GEN-END:variables
 }

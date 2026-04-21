@@ -7,26 +7,6 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MotoAmigoDto</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MotoAmigoPublicarRepartidores1</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MotoAmigoSeguimientoTiempoReal</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MotoAmigoCalculoRuta</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>RELEASE250</version>
@@ -52,6 +32,21 @@
             <artifactId>nanohttpd</artifactId>
             <version>2.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>MotoAmigoNegocio</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>MotoAmigoDto</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>CUSolicitarEntrega</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,6 +61,10 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.mycompany.motoamigopresentacion.Main</mainClass>
+                    <options>
+                        <option>-Dprism.allowhidpi=false</option>
+                        <option>-Dsun.java2d.uiScale=1.0</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

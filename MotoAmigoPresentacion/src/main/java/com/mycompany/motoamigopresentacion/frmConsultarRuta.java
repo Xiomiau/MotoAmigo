@@ -5,8 +5,8 @@
 package com.mycompany.motoamigopresentacion;
 
 import com.consultarruta.servicios.mapBox.MapBoxMock;
-import com.mycompany.motoamigocalculoruta.ConsultarRuta;
-import com.mycompany.motoamigocalculoruta.IConsultarRuta;
+import com.mycompany.cusolicitarentrega.ConsultarRuta;
+import com.mycompany.cusolicitarentrega.IConsultarRuta;
 import com.mycompany.motoamigodto.RutaRequestDTO;
 import com.mycompany.motoamigodto.RutaResponseDTO;
 import com.mycompany.motoamigonegocio.IRutaBO;

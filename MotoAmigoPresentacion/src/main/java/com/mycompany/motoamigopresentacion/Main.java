@@ -10,7 +10,10 @@ package com.mycompany.motoamigopresentacion;
  */
 public class Main {
     public static void main(String[] args) {
-
+        
+        System.setProperty("prism.allowhidpi", "false");
+        System.setProperty("sun.java2d.uiScale", "1.0");
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -21,10 +24,9 @@ public class Main {
         } catch (Exception e) {
             System.out.println("No se pudo aplicar Nimbus");
         }
-
+        
         java.awt.EventQueue.invokeLater(() -> {
             new FrmPublicarARepartidores_vistaEmprendedor().setVisible(true);
         });
     }
-    
 }
