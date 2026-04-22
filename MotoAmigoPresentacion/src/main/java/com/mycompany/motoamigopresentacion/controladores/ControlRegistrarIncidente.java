@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package controladores;
+package com.mycompany.motoamigopresentacion.controladores;
 
 
 import com.mycompany.motoamigodto.EntregaDTO;
@@ -51,7 +51,7 @@ public class ControlRegistrarIncidente {
 
     // 3. Transición cuando da clic en "Reportar"
     public void irAFormularioIncidente() {
-        // Validación simulada de tu diagrama de secuencia
+        // Validación simulada del diagrama de secuencia
         if (entregaActual.getEstadoEntrega().equals("EN CURSO")) {
             frmNavegacion.dispose(); // Cierra ventana 2
             

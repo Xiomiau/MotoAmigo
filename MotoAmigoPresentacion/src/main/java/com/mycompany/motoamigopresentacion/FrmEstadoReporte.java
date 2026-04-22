@@ -4,7 +4,7 @@
  */
 package com.mycompany.motoamigopresentacion;
 
-import controladores.ControlRegistrarIncidente;
+import com.mycompany.motoamigopresentacion.controladores.ControlRegistrarIncidente;
 import com.mycompany.motoamigodto.EntregaDTO;
 import com.mycompany.motoamigodto.IncidenteDTO;
 

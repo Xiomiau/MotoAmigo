@@ -10,7 +10,7 @@ import com.consultarruta.servicios.mapBox.MapBoxMock;
 import com.mycompany.cusolicitarentrega.FuncionalidadSeguimiento;
 import com.mycompany.cusolicitarentrega.IFuncionalidadSeguimiento;
 import com.mycompany.motoamigodto.UbicacionDTO;
-import controladores.ControlRegistrarIncidente;
+import com.mycompany.motoamigopresentacion.controladores.ControlRegistrarIncidente;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Rectangle;

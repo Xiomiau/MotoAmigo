@@ -4,7 +4,7 @@
  */
 package com.mycompany.motoamigopresentacion;
 
-import controladores.ControlRegistrarIncidente;
+import com.mycompany.motoamigopresentacion.controladores.ControlRegistrarIncidente;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

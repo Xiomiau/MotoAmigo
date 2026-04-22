@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.motoamigopresentacion;
-import controladores.ControlRegistrarIncidente;
+import com.mycompany.motoamigopresentacion.controladores.ControlRegistrarIncidente;
 import com.mycompany.motoamigodto.EntregaDTO;
 
 /**

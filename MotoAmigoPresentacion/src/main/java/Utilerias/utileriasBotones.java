@@ -71,4 +71,6 @@ public class utileriasBotones {
         btn.setBorderPainted(false);
         btn.setOpaque(true);
     }
+    
+    
 }
