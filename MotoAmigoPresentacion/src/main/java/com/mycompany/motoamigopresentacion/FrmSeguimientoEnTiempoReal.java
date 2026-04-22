@@ -6,6 +6,7 @@ package com.mycompany.motoamigopresentacion;
 
 import Utilerias.OSMTileFactoryCustom;
 import Utilerias.utileriasBotones;
+
 import com.mycompany.cusolicitarentrega.FuncionalidadSeguimiento;
 import com.mycompany.cusolicitarentrega.IFuncionalidadSeguimiento;
 import com.mycompany.motoamigodto.UbicacionDTO;
@@ -39,6 +40,7 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
     public FrmSeguimientoEnTiempoReal() {
         
         this.funcionalidad = FuncionalidadSeguimiento.crear();
+        this.control = new ControlRegistrarIncidente();
         initComponents();
         inicializarUI();
         inicializarMapa();

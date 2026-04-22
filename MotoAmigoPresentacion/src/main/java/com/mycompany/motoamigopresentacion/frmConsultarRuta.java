@@ -4,7 +4,9 @@
  */
 package com.mycompany.motoamigopresentacion;
 
-import com.consultarruta.servicios.mapBox.MapBoxMock;
+import Utilerias.OSMTileFactoryCustom;
+import com.consultarruta.servicios.mapBox.MapBoxService;
+import com.consultarruta.servicios.mapBox.MapBoxService;
 import com.mycompany.cusolicitarentrega.ConsultarRuta;
 import com.mycompany.cusolicitarentrega.IConsultarRuta;
 import com.mycompany.motoamigodto.RutaRequestDTO;
@@ -16,78 +18,112 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.viewer.DefaultWaypoint;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.WaypointPainter;
+import panelesUtilerias.PanelHeader;
 
 /**
  *
  * @author calo2
  */
-
-public class frmConsultarRuta extends javax.swing.JFrame {
+public class FrmConsultarRuta extends javax.swing.JFrame {
 
     private IConsultarRuta casoUso;
+    private PanelHeader panelUtil;
+    private JXMapViewer mapViewer;
+    private WaypointPainter<DefaultWaypoint> waypointPainter;
+    private static final Logger LOGGER = Logger.getLogger(FrmConsultarRuta.class.getName());
 
-    /**
-     * Creates new form ConsultarRutaFORM
-     * @param request
-     */
-    public frmConsultarRuta(RutaRequestDTO request) {
+    public FrmConsultarRuta(RutaRequestDTO request) {
         initComponents();
-        inicializarPanelMapa();
-        IRutaBO rutaBO = new RutaBO(new MapBoxMock());
+        panelUtil = new PanelHeader();
+        this.panelSuperior.add(panelUtil);
+
+        IRutaBO rutaBO = new RutaBO(new MapBoxService());
         casoUso = new ConsultarRuta(rutaBO);
-        setLocationRelativeTo(null);
 
-        RutaResponseDTO response = casoUso.consultarRuta(request);
+        // Tamaño predeterminado y centrado
+        this.setSize(1008, 738);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
 
-        // Mostrar resultado en tus labels ya definidos en el form
-        lblDistancia.setText(String.format("%.2f km", response.getDistancia()));
-        lblETA.setText(response.getTiempoEstimado() + " min");
-        lblCosto.setText("$" + String.format("%.2f MXN", response.getCosto()));
+        try {
+            // Consultar ruta con direcciones en texto
+            RutaResponseDTO response = casoUso.consultarRuta(request);
+
+            if (response != null && response.isRutaValida()) {
+                inicializarPanelMapa(response);
+
+                lblDistancia.setText(String.format("%.2f km", response.getDistancia()));
+                lblETA.setText(response.getTiempoEstimado() + " min");
+                lblCosto.setText("$" + String.format("%.2f MXN", response.getCosto()));
+            } else {
+                mostrarErrorEnLabels("No se pudo calcular la ruta");
+            }
+        } catch (Exception e) {
+            LOGGER.severe("Error al consultar ruta: " + e.getMessage());
+            mostrarErrorEnLabels("Error al consultar ruta");
+        }
     }
 
-   private void inicializarPanelMapa() {
-    // Crear un panel personalizado que dibuje un mock
-    JPanel mapaMock = new JPanel() {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
+    /**
+     * Inicializa el mapa usando las coordenadas ya calculadas en el response.
+     */
+    private void inicializarPanelMapa(RutaResponseDTO response) {
+        mapViewer = new JXMapViewer();
 
-            // Fondo gris claro
-            g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(0, 0, getWidth(), getHeight());
+        // Configurar tiles OSM
+        OSMTileFactoryCustom tileFactory = new OSMTileFactoryCustom();
+        tileFactory.setThreadPoolSize(4);
+        mapViewer.setTileFactory(tileFactory);
 
-            // Simulación de ruta: línea azul
-            g.setColor(Color.BLUE);
-            g.drawLine(50, 50, getWidth() - 50, getHeight() - 50);
-
-            // Puntos de origen y destino
-            g.setColor(Color.RED);
-            g.fillOval(45, 45, 12, 12); // origen
-            g.setColor(Color.BLACK);
-            g.fillOval(getWidth() - 60, getHeight() - 60, 12, 12); // destino
-
-            // Texto placeholder
-            g.setColor(Color.DARK_GRAY);
-            g.setFont(new Font("Arial", Font.ITALIC, 14));
-            g.drawString("Mapa simulado", getWidth()/2 - 50, getHeight()/2);
+        // Validar coordenadas
+        if (response.getLatOrigen() == null || response.getLngOrigen() == null
+                || response.getLatDestino() == null || response.getLngDestino() == null) {
+            LOGGER.severe("El response no contiene coordenadas válidas");
+            mostrarErrorEnLabels("Coordenadas inválidas");
+            return;
         }
-    };
 
-    // Ajustes visuales
-    mapaMock.setBorder(BorderFactory.createTitledBorder("Mapa de Ruta"));
-    mapaMock.setPreferredSize(new Dimension(400, 300));
+        // Posiciones de origen y destino desde el response
+        GeoPosition origen = new GeoPosition(response.getLatOrigen(), response.getLngOrigen());
+        GeoPosition destino = new GeoPosition(response.getLatDestino(), response.getLngDestino());
 
-    // Reemplazar el panel del diseñador por este mock
-    panelMapa.removeAll();
-    panelMapa.setLayout(new BorderLayout());
-    panelMapa.add(mapaMock, BorderLayout.CENTER);
+        // Ajustar zoom y centrar en origen
+        mapViewer.setZoom(7);
+        mapViewer.setAddressLocation(origen);
 
-    // Refrescar
-    panelMapa.revalidate();
-    panelMapa.repaint();
-}
+        // Crear waypoints
+        DefaultWaypoint wpOrigen = new DefaultWaypoint(origen);
+        DefaultWaypoint wpDestino = new DefaultWaypoint(destino);
+
+        // Pintar ambos pines
+        waypointPainter = new WaypointPainter<>();
+        waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(wpOrigen, wpDestino)));
+        mapViewer.setOverlayPainter(waypointPainter);
+
+        // Agregar al panel
+        panelMapa.removeAll();
+        panelMapa.setLayout(new BorderLayout());
+        panelMapa.add(mapViewer, BorderLayout.CENTER);
+
+        panelMapa.revalidate();
+        panelMapa.repaint();
+    }
+
+    private void mostrarErrorEnLabels(String mensaje) {
+        lblDistancia.setText(mensaje);
+        lblETA.setText("-");
+        lblCosto.setText("-");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,8 +135,6 @@ public class frmConsultarRuta extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         panelSuperior = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         panelMapa = new javax.swing.JPanel();
         panelInformacionRuta = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -118,32 +152,15 @@ public class frmConsultarRuta extends javax.swing.JFrame {
 
         panelSuperior.setBackground(new java.awt.Color(0, 0, 0));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("MotoAmigo");
-
-        jLabel2.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel2.setText("Calculo de Ruta");
-
         javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
         panelSuperior.setLayout(panelSuperiorLayout);
         panelSuperiorLayout.setHorizontalGroup(
             panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(15, 15, 15))
+            .addGap(0, 475, Short.MAX_VALUE)
         );
         panelSuperiorLayout.setVerticalGroup(
             panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 28, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout panelMapaLayout = new javax.swing.GroupLayout(panelMapa);
@@ -249,7 +266,7 @@ public class frmConsultarRuta extends javax.swing.JFrame {
                         .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(560, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,7 +280,7 @@ public class frmConsultarRuta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -281,19 +298,17 @@ public class frmConsultarRuta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
-       new FrmSeguimientoEnTiempoReal().setVisible(true);
-       this.dispose();
+        new FrmSeguimientoEnTiempoReal().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
 
     private void btnCancelarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSolicitudActionPerformed
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCancelarSolicitudActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarSolicitud;
     private javax.swing.JButton btnEnviarSolicitud;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

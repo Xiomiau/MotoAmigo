@@ -21,11 +21,9 @@ public class RutaBO implements IRutaBO {
     }
 
     @Override
-    public RutaResponseDTO calcularRuta(RutaRequestDTO dto){
-
+    public RutaResponseDTO calcularRuta(RutaRequestDTO dto) {
         if (dto.getDireccionRecoleccion() == null || dto.getDireccionRecoleccion().isEmpty()
                 || dto.getDireccionEntrega() == null || dto.getDireccionEntrega().isEmpty()) {
-
             return new RutaResponseDTO(
                     dto.getDireccionRecoleccion(),
                     dto.getDireccionEntrega(),
@@ -46,14 +44,13 @@ public class RutaBO implements IRutaBO {
 
         double costoCalculado = calcularCosto(ruta.getTiempoEstimado());
         ruta.setCosto(costoCalculado);
-        
+
         return ruta;
     }
 
     private double calcularCosto(int tiempoEstimado) {
-        double costoBase = 10.0;       // tarifa mínima
-        double tarifaMinuto = 1.0;     // costo por minuto
-
+        double costoBase = 10.0; 
+        double tarifaMinuto = 1.0; 
         return costoBase + (tarifaMinuto * tiempoEstimado);
     }
 }
