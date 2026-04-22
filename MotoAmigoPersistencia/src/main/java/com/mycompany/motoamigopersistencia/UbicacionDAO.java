@@ -22,7 +22,7 @@ public class UbicacionDAO implements IUbicacionDAO {
         return instancia;
     }
 
-    private static final String TOKEN = "pk.eyJ1IjoiY3ViaXhhIiwiYSI6ImNtbnFzb2h2ZjBiMHoyc240ajN1MmE1YzUifQ.q-1JIZNmttY9LI5vE_aD7w";
+    private static final String TOKEN = "";
     private static final String URL_BASE
             = "https://api.mapbox.com/geocoding/v5/mapbox.places/";
 
