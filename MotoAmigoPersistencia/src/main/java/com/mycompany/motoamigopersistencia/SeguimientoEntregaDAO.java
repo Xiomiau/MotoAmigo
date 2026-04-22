@@ -16,21 +16,39 @@ public class SeguimientoEntregaDAO implements ISeguimientoEntregaDAO {
 
     private List<Ubicacion> ruta = new ArrayList<>();
     private int indice = 0;
+    private static SeguimientoEntregaDAO instancia;
 
-    public SeguimientoEntregaDAO() {
-        ruta.add(new Ubicacion(27.4860, -109.9390, "Origen"));
-        ruta.add(new Ubicacion(27.4855, -109.9383, "En camino..."));
-        ruta.add(new Ubicacion(27.4850, -109.9376, "En camino..."));
-        ruta.add(new Ubicacion(27.4825, -109.9341, "Casi llega..."));
-        ruta.add(new Ubicacion(27.4740, -109.9250, "Destino"));
+    private SeguimientoEntregaDAO() {
+        // Constructor vacío: ya no simula datos fijos
+    }
+
+    public static SeguimientoEntregaDAO getInstance() {
+        if (instancia == null) {
+            instancia = new SeguimientoEntregaDAO();
+        }
+        return instancia;
+    }
+
+    /**
+     * Reemplaza la simulación por la ruta real calculada.
+     */
+    public void setRutaReal(List<Ubicacion> nuevaRuta) {
+        this.ruta = nuevaRuta;
+        this.indice = 0; // Reiniciar seguimiento
     }
 
     @Override
     public Ubicacion obtenerSiguiente() {
+        if (ruta == null || ruta.isEmpty()) return null;
+
         if (indice < ruta.size()) {
             return ruta.get(indice++);
-        } else {
-            return ruta.get(ruta.size() - 1);
         }
+        return ruta.get(ruta.size() - 1);
+    }
+
+    @Override
+    public boolean esUltimoPunto() {
+        return indice >= ruta.size();
     }
 }

@@ -4,6 +4,8 @@
  */
 package com.mycompany.motoamigopresentacion;
 
+import com.mycompany.motoamigodto.SolicitudEntregaDTO;
+
 /**
  *
  * @author joset
@@ -27,6 +29,10 @@ public class Main {
 
         java.awt.EventQueue.invokeLater(() -> {
             new FrmPublicarARepartidores_vistaEmprendedor().setVisible(true);
+        });
+        java.awt.EventQueue.invokeLater(() -> {
+            new FrmPublicarARepartidores(new SolicitudEntregaDTO("calle amberes 314", "calle tabasco 322", "Caja", 10.5, 1, 1, "Activo", 10)).setVisible(true);
+            
         });
     }
 }

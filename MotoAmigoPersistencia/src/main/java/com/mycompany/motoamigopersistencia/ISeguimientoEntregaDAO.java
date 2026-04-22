@@ -13,4 +13,5 @@ import com.mycompany.Entidades.Ubicacion;
  */
 public interface ISeguimientoEntregaDAO {
    public Ubicacion obtenerSiguiente() ;
+   public boolean esUltimoPunto() ;
 }

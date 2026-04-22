@@ -6,47 +6,49 @@ package com.mycompany.motoamigopresentacion;
 
 import Utilerias.OSMTileFactoryCustom;
 import com.consultarruta.servicios.mapBox.MapBoxService;
-import com.consultarruta.servicios.mapBox.MapBoxService;
 import com.mycompany.cusolicitarentrega.ConsultarRuta;
 import com.mycompany.cusolicitarentrega.IConsultarRuta;
 import com.mycompany.motoamigodto.RutaRequestDTO;
 import com.mycompany.motoamigodto.RutaResponseDTO;
 import com.mycompany.motoamigonegocio.IRutaBO;
 import com.mycompany.motoamigonegocio.RutaBO;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.WaypointPainter;
+import org.netbeans.lib.awtextra.AbsoluteConstraints;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 import panelesUtilerias.PanelHeader;
 
 /**
  *
  * @author calo2
  */
-public class FrmConsultarRuta extends javax.swing.JFrame {
+public class frmConsultarRuta extends javax.swing.JFrame {
 
     private IConsultarRuta casoUso;
-    private PanelHeader panelUtil;
     private JXMapViewer mapViewer;
     private WaypointPainter<DefaultWaypoint> waypointPainter;
-    private static final Logger LOGGER = Logger.getLogger(FrmConsultarRuta.class.getName());
-
-    public FrmConsultarRuta(RutaRequestDTO request) {
+    private static final Logger LOGGER = Logger.getLogger(frmConsultarRuta.class.getName());
+    private RutaResponseDTO response;
+    public frmConsultarRuta(RutaRequestDTO request) {
         initComponents();
-        panelUtil = new PanelHeader();
-        this.panelSuperior.add(panelUtil);
 
-        IRutaBO rutaBO = new RutaBO(new MapBoxService());
+        IRutaBO rutaBO = new RutaBO(MapBoxService.getInstance());
         casoUso = new ConsultarRuta(rutaBO);
 
         // Tamaño predeterminado y centrado
@@ -56,7 +58,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
 
         try {
             // Consultar ruta con direcciones en texto
-            RutaResponseDTO response = casoUso.consultarRuta(request);
+            this.response = casoUso.consultarRuta(request);
 
             if (response != null && response.isRutaValida()) {
                 inicializarPanelMapa(response);
@@ -71,6 +73,9 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
             LOGGER.severe("Error al consultar ruta: " + e.getMessage());
             mostrarErrorEnLabels("Error al consultar ruta");
         }
+
+        panelPrincipal.setLayout(new AbsoluteLayout());
+        panelPrincipal.add(new PanelHeader(), new AbsoluteConstraints(0, 0, 1366, 130));
     }
 
     /**
@@ -78,13 +83,14 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
      */
     private void inicializarPanelMapa(RutaResponseDTO response) {
         mapViewer = new JXMapViewer();
-
-        // Configurar tiles OSM
+        org.jxmapviewer.input.PanMouseInputListener mm = new org.jxmapviewer.input.PanMouseInputListener(mapViewer);
+            mapViewer.addMouseListener(mm);
+            mapViewer.addMouseMotionListener(mm);
+            mapViewer.addMouseWheelListener(new org.jxmapviewer.input.ZoomMouseWheelListenerCenter(mapViewer));
         OSMTileFactoryCustom tileFactory = new OSMTileFactoryCustom();
         tileFactory.setThreadPoolSize(4);
         mapViewer.setTileFactory(tileFactory);
 
-        // Validar coordenadas
         if (response.getLatOrigen() == null || response.getLngOrigen() == null
                 || response.getLatDestino() == null || response.getLngDestino() == null) {
             LOGGER.severe("El response no contiene coordenadas válidas");
@@ -92,24 +98,25 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
             return;
         }
 
-        // Posiciones de origen y destino desde el response
         GeoPosition origen = new GeoPosition(response.getLatOrigen(), response.getLngOrigen());
         GeoPosition destino = new GeoPosition(response.getLatDestino(), response.getLngDestino());
 
-        // Ajustar zoom y centrar en origen
-        mapViewer.setZoom(7);
-        mapViewer.setAddressLocation(origen);
+        List<GeoPosition> rutaPuntos = Arrays.asList(origen, destino);
 
-        // Crear waypoints
-        DefaultWaypoint wpOrigen = new DefaultWaypoint(origen);
-        DefaultWaypoint wpDestino = new DefaultWaypoint(destino);
-
-        // Pintar ambos pines
         waypointPainter = new WaypointPainter<>();
-        waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(wpOrigen, wpDestino)));
-        mapViewer.setOverlayPainter(waypointPainter);
+        waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(new DefaultWaypoint(origen), new DefaultWaypoint(destino))));
 
-        // Agregar al panel
+        Painter<JXMapViewer> rutaPainter = getRoutePainter(rutaPuntos);
+
+        List<Painter<JXMapViewer>> painters = new ArrayList<>();
+        painters.add(rutaPainter);
+        painters.add(waypointPainter);
+
+        CompoundPainter<JXMapViewer> compoundPainter = new CompoundPainter<>(painters);
+        mapViewer.setOverlayPainter(compoundPainter);
+
+        mapViewer.calculateZoomFrom(new HashSet<>(rutaPuntos));
+        mapViewer.setZoom(mapViewer.getZoom() - 1); 
         panelMapa.removeAll();
         panelMapa.setLayout(new BorderLayout());
         panelMapa.add(mapViewer, BorderLayout.CENTER);
@@ -133,8 +140,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        panelSuperior = new javax.swing.JPanel();
+        panelPrincipal = new javax.swing.JPanel();
         panelMapa = new javax.swing.JPanel();
         panelInformacionRuta = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -147,21 +153,14 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
         btnCancelarSolicitud = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(1008, 738));
+        setMinimumSize(new java.awt.Dimension(1008, 738));
+        setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        panelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
-        panelSuperior.setBackground(new java.awt.Color(0, 0, 0));
-
-        javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
-        panelSuperior.setLayout(panelSuperiorLayout);
-        panelSuperiorLayout.setHorizontalGroup(
-            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-        panelSuperiorLayout.setVerticalGroup(
-            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 28, Short.MAX_VALUE)
-        );
+        panelMapa.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelMapaLayout = new javax.swing.GroupLayout(panelMapa);
         panelMapa.setLayout(panelMapaLayout);
@@ -171,7 +170,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
         );
         panelMapaLayout.setVerticalGroup(
             panelMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 369, Short.MAX_VALUE)
+            .addGap(0, 382, Short.MAX_VALUE)
         );
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -204,12 +203,17 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
                     .addGroup(panelInformacionRutaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(panelInformacionRutaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDistancia, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblETA, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25))
+                    .addGroup(panelInformacionRutaLayout.createSequentialGroup()
+                        .addComponent(lblCosto, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
+                        .addGap(25, 25, 25))
+                    .addGroup(panelInformacionRutaLayout.createSequentialGroup()
+                        .addComponent(lblETA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(25, 25, 25))
+                    .addGroup(panelInformacionRutaLayout.createSequentialGroup()
+                        .addComponent(lblDistancia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         panelInformacionRutaLayout.setVerticalGroup(
             panelInformacionRutaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,7 +234,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
         );
 
         btnEnviarSolicitud.setBackground(new java.awt.Color(255, 102, 0));
-        btnEnviarSolicitud.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnEnviarSolicitud.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnEnviarSolicitud.setForeground(new java.awt.Color(255, 255, 255));
         btnEnviarSolicitud.setText("Publicar Solicitud");
         btnEnviarSolicitud.addActionListener(new java.awt.event.ActionListener() {
@@ -240,7 +244,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
         });
 
         btnCancelarSolicitud.setBackground(new java.awt.Color(255, 102, 0));
-        btnCancelarSolicitud.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnCancelarSolicitud.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCancelarSolicitud.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelarSolicitud.setText("Cancelar");
         btnCancelarSolicitud.addActionListener(new java.awt.event.ActionListener() {
@@ -249,56 +253,79 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelSuperior, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panelInformacionRuta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(26, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
+        panelPrincipal.setLayout(panelPrincipalLayout);
+        panelPrincipalLayout.setHorizontalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelInformacionRuta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                .addGap(0, 209, Short.MAX_VALUE)
+                .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157)
+                .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(230, 230, 230))
+        );
+        panelPrincipalLayout.setVerticalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private Painter<JXMapViewer> getRoutePainter(List<GeoPosition> track) {
+        return new Painter<JXMapViewer>() {
+            @Override
+            public void paint(Graphics2D g, JXMapViewer map, int w, int h) {
+                g = (Graphics2D) g.create();
+                Rectangle rect = map.getViewportBounds();
+                g.translate(-rect.x, -rect.y);
 
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g.setColor(new Color(255, 102, 0));
+                g.setStroke(new BasicStroke(4));
+
+                int lastX = -1;
+                int lastY = -1;
+
+                for (GeoPosition gp : track) {
+                    Point2D pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+                    if (lastX != -1) {
+                        g.drawLine(lastX, lastY, (int) pt.getX(), (int) pt.getY());
+                    }
+                    lastX = (int) pt.getX();
+                    lastY = (int) pt.getY();
+                }
+                g.dispose();
+            }
+        };
+    }
     private void btnEnviarSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarSolicitudActionPerformed
-        new FrmSeguimientoEnTiempoReal().setVisible(true);
+        new FrmSeguimientoEnTiempoReal_Emprendedor(this.response).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnEnviarSolicitudActionPerformed
 
@@ -312,12 +339,11 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCosto;
     private javax.swing.JLabel lblDistancia;
     private javax.swing.JLabel lblETA;
     private javax.swing.JPanel panelInformacionRuta;
     private javax.swing.JPanel panelMapa;
-    private javax.swing.JPanel panelSuperior;
+    private javax.swing.JPanel panelPrincipal;
     // End of variables declaration//GEN-END:variables
 }

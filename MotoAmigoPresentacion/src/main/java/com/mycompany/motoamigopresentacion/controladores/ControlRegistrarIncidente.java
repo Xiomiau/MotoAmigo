@@ -4,10 +4,8 @@
  */
 package com.mycompany.motoamigopresentacion.controladores;
 
-
 import com.mycompany.motoamigodto.EntregaDTO;
 import com.mycompany.motoamigodto.IncidenteDTO;
-import com.mycompany.motoamigopresentacion.FrmDetallePedido;
 import com.mycompany.motoamigopresentacion.FrmEstadoReporte;
 import com.mycompany.motoamigopresentacion.FrmFormularioIncidente;
 import com.mycompany.motoamigopresentacion.FrmSeguimientoEnTiempoReal;
@@ -15,25 +13,23 @@ import com.mycompany.motoamigopresentacion.FrmSeguimientoEnTiempoReal;
 import javax.swing.JOptionPane;
 
 public class ControlRegistrarIncidente {
-    
+
     // Variables de estado "de mentiritas"
     private EntregaDTO entregaActual;
     private IncidenteDTO incidenteNuevo;
 
-    // Instancias de tus ventanas
-    private FrmDetallePedido frmDetalle;
     private FrmSeguimientoEnTiempoReal frmNavegacion;
     private FrmFormularioIncidente frmFormulario;
     private FrmEstadoReporte frmEstado;
-    
+
     private static ControlRegistrarIncidente instancia;
-    
-    public ControlRegistrarIncidente() {
-        // Inicializamos una entrega falsa para la simulación
+
+    private ControlRegistrarIncidente() {
         entregaActual = new EntregaDTO(101, "Polanco 45", "Caja", "DISPONIBLE");
         incidenteNuevo = new IncidenteDTO();
     }
-     public static ControlRegistrarIncidente getInstance() {
+
+    public static ControlRegistrarIncidente getInstance() {
         if (instancia == null) {
             instancia = new ControlRegistrarIncidente();
         }
@@ -41,28 +37,12 @@ public class ControlRegistrarIncidente {
     }
 
     // --- MÉTODOS DE NAVEGACIÓN ---
-
-    // 1. Inicia el Caso de Uso
-    public void iniciarCasoDeUso() {
-        frmDetalle = new FrmDetallePedido(this, entregaActual);
-        frmDetalle.setVisible(true);
-    }
-
-    // 2. Transición cuando da clic en "Aceptar Pedido"
-    public void aceptarPedido() {
-        entregaActual.setEstadoEntrega("EN CURSO");
-        frmDetalle.dispose(); // Cierra ventana 1
-        
-        frmNavegacion = new FrmSeguimientoEnTiempoReal();
-        frmNavegacion.setVisible(true); 
-    }
-
     // 3. Transición cuando da clic en "Reportar"
     public void irAFormularioIncidente() {
         // Validación simulada del diagrama de secuencia
         if (entregaActual.getEstadoEntrega().equals("EN CURSO")) {
             frmNavegacion.dispose(); // Cierra ventana 2
-            
+
             frmFormulario = new FrmFormularioIncidente(this);
             frmFormulario.setVisible(true); // Abre ventana 3
         }
@@ -80,12 +60,12 @@ public class ControlRegistrarIncidente {
         // [datos válidos] - Éxito
         incidenteNuevo.setTipoIncidente(tipoIncidenteSeleccionado);
         incidenteNuevo.setIdEntregaAsociada(entregaActual.getIdEntrega());
-        
+
         // Actualizamos estado simulando a la Base de Datos
         entregaActual.setEstadoEntrega("NO COMPLETADA");
-        
+
         frmFormulario.dispose(); // Cierra ventana 3
-        
+
         frmEstado = new FrmEstadoReporte(this, entregaActual, incidenteNuevo);
         frmEstado.setVisible(true); // Abre ventana 4 (Instrucciones finales)
     }

@@ -1,12 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.mycompany.cusolicitarentrega;
 
+import com.consultarruta.servicios.mapBox.MapBoxService;
 import com.mycompany.motoamigodto.RutaRequestDTO;
 import com.mycompany.motoamigodto.RutaResponseDTO;
+import com.mycompany.motoamigonegocio.FachadaNegocio;
+import com.mycompany.motoamigonegocio.IFachadaNegocio;
 import com.mycompany.motoamigonegocio.IRutaBO;
+import com.mycompany.motoamigonegocio.NegocioException;
+import com.mycompany.motoamigonegocio.RutaBO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,15 +18,22 @@ import com.mycompany.motoamigonegocio.IRutaBO;
  */
 public class ConsultarRuta implements IConsultarRuta {
 
-    private IRutaBO negocio;
+    private IFachadaNegocio fachada;
 
     public ConsultarRuta(IRutaBO negocio) {
-        this.negocio = negocio;
+        this.fachada = new FachadaNegocio(
+        new RutaBO( MapBoxService.getInstance())
+);
     }
 
     @Override
     public RutaResponseDTO consultarRuta(RutaRequestDTO rutaDTO) {
-        return negocio.calcularRuta(rutaDTO);
+        try {
+            return fachada.calcularRuta(rutaDTO);
+        } catch (NegocioException ex) {
+            Logger.getLogger(ConsultarRuta.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

@@ -15,7 +15,7 @@ public class RutaDAOMock implements IRutaDAO{
 
     @Override
     public Ruta guardarRuta(RutaResponseDTO ruta) {
-        return new Ruta(ruta.getDireccionRecoleccion(), ruta.getDireccionEntrega(), ruta.getTiempoEstimado());
+        return new Ruta(ruta.getOrigen(), ruta.getDestino(), ruta.getTiempoEstimado());
     }
     
     

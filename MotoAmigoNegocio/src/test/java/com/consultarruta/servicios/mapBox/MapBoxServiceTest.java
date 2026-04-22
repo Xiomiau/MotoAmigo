@@ -19,7 +19,7 @@ public class MapBoxServiceTest {
 
     @Test
     void testObtenerRutaConDireccionesValidas() {
-        MapBoxService service = new MapBoxService();
+        MapBoxService service =  MapBoxService.getInstance();
 
         String origen = "Av. Miguel Alemán 123, Ciudad Obregón, Sonora, México";
         String destino = "Plaza Tutuli, Ciudad Obregón, Sonora, México";
@@ -44,7 +44,7 @@ public class MapBoxServiceTest {
 
     @Test
     void testObtenerRutaConDireccionesInvalidas() {
-        MapBoxService service = new MapBoxService();
+        MapBoxService service =  MapBoxService.getInstance();
 
         String origen = "";
         String destino = "";

@@ -1,12 +1,11 @@
-
 package com.mycompany.motoamigopresentacion;
 
 import Utilerias.OSMTileFactoryCustom;
 import Utilerias.utileriasBotones;
 import com.mycompany.cusolicitarentrega.FuncionalidadSeguimiento;
 import com.mycompany.cusolicitarentrega.IFuncionalidadSeguimiento;
+import com.mycompany.motoamigodto.RutaResponseDTO;
 import com.mycompany.motoamigodto.UbicacionDTO;
-import com.mycompany.motoamigopresentacion.controladores.ControlRegistrarIncidente;
 import java.awt.BorderLayout;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -14,10 +13,13 @@ import java.util.HashSet;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.WaypointPainter;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 import panelesUtilerias.PanelHeader;
 
 /**
@@ -25,28 +27,31 @@ import panelesUtilerias.PanelHeader;
  * @author joset
  */
 public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
+
     private JXMapViewer mapViewer;
     private WaypointPainter<DefaultWaypoint> waypointPainter;
     private DefaultWaypoint marcador;
-
-    private final IFuncionalidadSeguimiento funcionalidad;
-    private ControlRegistrarIncidente control = ControlRegistrarIncidente.getInstance();
     
+    private RutaResponseDTO ruta; 
+    private final IFuncionalidadSeguimiento funcionalidad;
+
     /**
      * Creates new form FrmSeguimientoEnTiempoReal_Emprendedor
      */
-    public FrmSeguimientoEnTiempoReal_Emprendedor() {
+    public FrmSeguimientoEnTiempoReal_Emprendedor(RutaResponseDTO ruta) {
+        this.ruta = ruta;
         this.funcionalidad = FuncionalidadSeguimiento.crear();
         initComponents();
         inicializarUI();
         inicializarMapa();
         setLocationRelativeTo(null);
     }
+
     private void inicializarUI() {
+        panPrincipal.setLayout(new AbsoluteLayout());
         utileriasBotones.btnNaranja(btnContactarRepa);
         utileriasBotones.btnNaranja(btnVolverMenu);
         panPrincipal.add(new PanelHeader(), new AbsoluteConstraints(0, 0, 1366, 130));
-        txtSeguimiento.setEditable(false);
 
     }
 
@@ -57,19 +62,25 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
         tileFactory.setThreadPoolSize(4);
         mapViewer.setTileFactory(tileFactory);
 
-        GeoPosition posicionInicial = new GeoPosition(27.486, -109.939);
-        mapViewer.setZoom(7);
-        mapViewer.setAddressLocation(posicionInicial);
+        PanMouseInputListener mm = new PanMouseInputListener(mapViewer);
+        mapViewer.addMouseListener(mm);
+        mapViewer.addMouseMotionListener(mm);
+        mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
 
-        marcador = new DefaultWaypoint(posicionInicial);
+        GeoPosition posInicial = new GeoPosition(ruta.getLatOrigen(), ruta.getLngOrigen());
+
+        mapViewer.setAddressLocation(posInicial);
+        mapViewer.setZoom(4);
+
+        marcador = new DefaultWaypoint(posInicial);
         waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(marcador)));
+
         mapViewer.setOverlayPainter(waypointPainter);
 
         panelMapa.setLayout(new BorderLayout());
         panelMapa.add(mapViewer, BorderLayout.CENTER);
-        panelMapa.revalidate();
-        panelMapa.repaint();
+
         agregarInteraccionMapa();
         iniciarSeguimiento();
     }
@@ -88,6 +99,7 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
             }
         });
     }
+
     /**
      * Crea temporizador que cada 3 segundos consulta la siguiente ubicación del
      * repartidor usando el modulo de funcionalidad. Actualiza el estado y el
@@ -95,21 +107,27 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
      *
      */
     private void iniciarSeguimiento() {
-        Timer timer = new Timer(3000, null);
+        Timer timer = new Timer(1000, null);
 
         timer.addActionListener(e -> {
             if (funcionalidad.haTerminado()) {
                 timer.stop();
-                lblEstado.setText("Estado: Entregado");
-                txtSeguimiento.append(" Pedido entregado\n");
+                lblEstado.setText("Estado: Entrega Finalizada");
+                txtSeguimiento.append("[" + LocalTime.now().withNano(0) + "] El pedido ha sido entregado con éxito.\n");
+
+                JOptionPane.showMessageDialog(this,
+                        "¡El repartidor ha llegado al destino! El pedido se marca como entregado.",
+                        "Pedido Completado",
+                        JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             UbicacionDTO ubi = funcionalidad.obtenerSiguiente();
 
             lblEstado.setText("Estado: " + ubi.getDescripcion());
-            txtSeguimiento.append("[" + LocalTime.now().withNano(0) + "] "
-                    + ubi.getDescripcion() + "\n");
+            txtSeguimiento.append("[" + LocalTime.now().withNano(0) + "] " + ubi.getDescripcion() + "\n");
+
+            txtSeguimiento.setCaretPosition(txtSeguimiento.getDocument().getLength());
 
             moverMarcador(ubi);
         });
@@ -122,14 +140,14 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
      * de cargar.
      */
     private void moverMarcador(UbicacionDTO ubi) {
-        if (mapViewer == null) {
-            return;
-        }
+        if (mapViewer == null) return;
 
         GeoPosition nuevaPos = new GeoPosition(ubi.getLatitud(), ubi.getLongitud());
         marcador = new DefaultWaypoint(nuevaPos);
         waypointPainter.setWaypoints(new HashSet<>(Arrays.asList(marcador)));
+
         mapViewer.setAddressLocation(nuevaPos);
+
         mapViewer.repaint();
     }
     /**
@@ -142,9 +160,6 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
     private void initComponents() {
 
         panPrincipal = new javax.swing.JPanel();
-        panelSuperior = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         panelMapa = new javax.swing.JPanel();
         panelInformacionRuta = new javax.swing.JPanel();
         lblEstado = new javax.swing.JLabel();
@@ -154,46 +169,14 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
         btnVolverMenu = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1008, 738));
         setMinimumSize(new java.awt.Dimension(1008, 738));
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panPrincipal.setBackground(new java.awt.Color(255, 255, 255));
         panPrincipal.setMaximumSize(new java.awt.Dimension(1008, 738));
         panPrincipal.setMinimumSize(new java.awt.Dimension(1008, 738));
         panPrincipal.setPreferredSize(new java.awt.Dimension(1008, 738));
-
-        panelSuperior.setBackground(new java.awt.Color(0, 0, 0));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("MotoAmigo");
-
-        jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel3.setText("Calculo de Ruta");
-
-        javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
-        panelSuperior.setLayout(panelSuperiorLayout);
-        panelSuperiorLayout.setHorizontalGroup(
-            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSuperiorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(14, 14, 14))
-        );
-        panelSuperiorLayout.setVerticalGroup(
-            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSuperiorLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
 
         panelMapa.setBackground(new java.awt.Color(255, 255, 255));
         panelMapa.setInheritsPopupMenu(true);
@@ -269,7 +252,6 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
         panPrincipal.setLayout(panPrincipalLayout);
         panPrincipalLayout.setHorizontalGroup(
             panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panPrincipalLayout.createSequentialGroup()
@@ -282,8 +264,7 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
         panPrincipalLayout.setVerticalGroup(
             panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panPrincipalLayout.createSequentialGroup()
-                .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(69, 69, 69)
                 .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -294,17 +275,17 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        getContentPane().add(panPrincipal, java.awt.BorderLayout.CENTER);
+        getContentPane().add(panPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnContactarRepaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContactarRepaActionPerformed
         JOptionPane.showMessageDialog(
-            this,
-            "Contactando con el repartidor",
-            "",
-            javax.swing.JOptionPane.INFORMATION_MESSAGE
+                this,
+                "Contactando con el repartidor",
+                "",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
         );
     }//GEN-LAST:event_btnContactarRepaActionPerformed
 
@@ -312,52 +293,15 @@ public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnVolverMenuActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmSeguimientoEnTiempoReal_Emprendedor().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContactarRepa;
     private javax.swing.JButton btnVolverMenu;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JPanel panPrincipal;
     private javax.swing.JPanel panelInformacionRuta;
     private javax.swing.JPanel panelMapa;
-    private javax.swing.JPanel panelSuperior;
     private javax.swing.JTextArea txtSeguimiento;
     // End of variables declaration//GEN-END:variables
 }

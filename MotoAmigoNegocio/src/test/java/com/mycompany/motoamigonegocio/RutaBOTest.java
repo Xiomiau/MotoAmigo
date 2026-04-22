@@ -19,7 +19,7 @@ public class RutaBOTest {
 
     @Test
     void testFlujoCompletoRutaValida() {
-        IMapBoxService mapboxService = new MapBoxService();
+        IMapBoxService mapboxService =  MapBoxService.getInstance();
         RutaBO rutaBO = new RutaBO(mapboxService);
 
         RutaRequestDTO request = new RutaRequestDTO(
@@ -51,7 +51,7 @@ public class RutaBOTest {
 
     @Test
     void testFlujoCamposVacios() {
-        IMapBoxService mapboxService = new MapBoxService();
+        IMapBoxService mapboxService = MapBoxService.getInstance();
         RutaBO rutaBO = new RutaBO(mapboxService);
 
         RutaRequestDTO request = new RutaRequestDTO("", "");
@@ -70,7 +70,7 @@ public class RutaBOTest {
 
     @Test
     void testObtenerRutaDireccionesValidas() {
-        MapBoxService service = new MapBoxService();
+        MapBoxService service =  MapBoxService.getInstance();
 
         String origen = "Av. Miguel Alemán 123, Ciudad Obregón, Sonora, México";
         String destino = "Plaza Tutuli, Ciudad Obregón, Sonora, México";

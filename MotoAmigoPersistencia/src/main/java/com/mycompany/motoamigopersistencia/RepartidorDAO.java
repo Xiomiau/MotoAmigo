@@ -15,6 +15,9 @@ import java.util.List;
  */
 public class RepartidorDAO implements IRepartidorDAO {
     private static RepartidorDAO instancia;
+
+    public RepartidorDAO() {
+    }
     
     public static RepartidorDAO getInstance() {
         if (instancia == null) {

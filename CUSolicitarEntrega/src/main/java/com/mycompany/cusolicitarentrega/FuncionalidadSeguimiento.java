@@ -1,7 +1,7 @@
 package com.mycompany.cusolicitarentrega;
 
 import com.consultarruta.servicios.mapBox.IMapBoxService;
-import com.consultarruta.servicios.mapBox.MapBoxMock;
+import com.consultarruta.servicios.mapBox.MapBoxService;
 import com.mycompany.motoamigodto.UbicacionDTO;
 
 public class FuncionalidadSeguimiento implements IFuncionalidadSeguimiento {
@@ -15,17 +15,17 @@ public class FuncionalidadSeguimiento implements IFuncionalidadSeguimiento {
     }
 
     public static FuncionalidadSeguimiento crear() {
-        return new FuncionalidadSeguimiento(new MapBoxMock());
+        return new FuncionalidadSeguimiento( MapBoxService.getInstance());
     }
 
     @Override
     public boolean haTerminado() {
-        return pasos >= TOTAL_PASOS;
+        return mapBoxService.comprobarSiFinalizoRuta(); 
+        
     }
 
     @Override
     public UbicacionDTO obtenerSiguiente() {
-        pasos++;
         return mapBoxService.obtenerSiguienteUbicacion();
     }
 }

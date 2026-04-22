@@ -34,14 +34,14 @@ public class PanelHeader extends javax.swing.JPanel {
 
         panelSuperior2.setBackground(new java.awt.Color(0, 0, 0));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("MotoAmigo");
 
         jLabel7.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel7.setText("Calculo de Ruta");
+        jLabel7.setText("Usuario");
 
         javax.swing.GroupLayout panelSuperior2Layout = new javax.swing.GroupLayout(panelSuperior2);
         panelSuperior2.setLayout(panelSuperior2Layout);
@@ -50,7 +50,7 @@ public class PanelHeader extends javax.swing.JPanel {
             .addGroup(panelSuperior2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1107, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 821, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addGap(14, 14, 14))
         );
@@ -64,7 +64,7 @@ public class PanelHeader extends javax.swing.JPanel {
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        add(panelSuperior2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        add(panelSuperior2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, -1));
     }// </editor-fold>//GEN-END:initComponents
 
 
