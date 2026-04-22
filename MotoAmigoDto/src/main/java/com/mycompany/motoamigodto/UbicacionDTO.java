@@ -9,9 +9,11 @@ package com.mycompany.motoamigodto;
  * @author joset
  */
 public class UbicacionDTO {
+
     private double latitud;
     private double longitud;
     private String descripcion;
+
 
     public UbicacionDTO(double latitud, double longitud, String descripcion) {
         this.latitud = latitud;
@@ -19,7 +21,21 @@ public class UbicacionDTO {
         this.descripcion = descripcion;
     }
 
-    public double getLatitud() { return latitud; }
-    public double getLongitud() { return longitud; }
-    public String getDescripcion() { return descripcion; }
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    @Override
+    public String toString() {
+        return  descripcion ;
+    }
+    
 }

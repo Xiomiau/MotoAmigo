@@ -6,10 +6,9 @@ package com.mycompany.motoamigopresentacion;
 
 import com.mycompany.motoamigodto.SolicitudEntregaDTO;
 import javax.swing.JOptionPane;
-import com.mycompany.motoamigopresentacion.controladores.ControlPublicarRepartidores;
+import com.mycompany.motoamigopresentacion.controladores.ControlSolicitarEntrega;
 import java.awt.Color;
 import panelesUtilerias.PanelRedondeado;
-
 
 /**
  *
@@ -17,13 +16,13 @@ import panelesUtilerias.PanelRedondeado;
  */
 public class FrmPublicarARepartidores extends javax.swing.JFrame {
 
-    private ControlPublicarRepartidores control = new ControlPublicarRepartidores();
+    private ControlSolicitarEntrega control = ControlSolicitarEntrega.getInstance();
     private SolicitudEntregaDTO solicitud;
     PanelRedondeado panelR;
     
     
 
-    public FrmPublicarARepartidores() {
+    public FrmPublicarARepartidores(SolicitudEntregaDTO solicitud) {
         initComponents();
         panelR = new PanelRedondeado(30);
         panelR.setBackground(Color.red);
@@ -31,17 +30,17 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         
         add(panelR);
         
-        //cargarSolicitud(SolicitudEntregaDTO solicitud);
+        cargarSolicitud(solicitud);
     }
 
     public void cargarSolicitud(SolicitudEntregaDTO solicitud) {
         this.solicitud = solicitud;
 
-//        txt_origen.setText(solicitud.getOrigen());
-//        txt_destino.setText(solicitud.getDestino());
-//        txt_tipoPaquete.setText(solicitud.getTipoPaquete());
-//        txt_peso.setText(String.valueOf(solicitud.getPesoAprox()));
-//        txt_distancia.setText(String.valueOf(solicitud.getDistancia()));
+        txt_origen.setText(solicitud.getOrigen());
+        txt_destino.setText(solicitud.getDestino());
+        txt_tipoPaquete.setText(solicitud.getTipoPaquete());
+        txt_peso.setText(String.valueOf(solicitud.getPesoAprox()));
+        txt_ganancia.setText(String.valueOf(solicitud.getDistancia()));
         txt_ganancia.setText(String.valueOf(solicitud.getDistancia() * 10));
     }
 
@@ -60,21 +59,21 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         panelRedondeado1 = new panelesUtilerias.PanelRedondeado();
         jLabel11 = new javax.swing.JLabel();
-        lbl_distancia = new javax.swing.JLabel();
+        txt_distancia = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txt_ganancia = new javax.swing.JLabel();
         btn_aceptar = new javax.swing.JButton();
         panelDestino = new panelesUtilerias.PanelRedondeado();
-        lbl_destino = new javax.swing.JLabel();
+        txt_destino = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         panelRecoleccion = new panelesUtilerias.PanelRedondeado();
-        lbl_destino1 = new javax.swing.JLabel();
+        txt_origen = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         panelTipoPaquete = new panelesUtilerias.PanelRedondeado();
-        lbl_destino2 = new javax.swing.JLabel();
+        txt_tipoPaquete = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         panelPeso = new panelesUtilerias.PanelRedondeado();
-        lbl_destino3 = new javax.swing.JLabel();
+        txt_peso = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
@@ -99,7 +98,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
             .addGroup(headerLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 760, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel10)
                 .addGap(35, 35, 35))
         );
@@ -119,9 +118,8 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(102, 102, 102));
         jLabel11.setText("DISTANCIA");
 
-        lbl_distancia.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lbl_distancia.setText("8.5 KM");
-        lbl_distancia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txt_distancia.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        txt_distancia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(102, 102, 102));
@@ -131,7 +129,6 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         txt_ganancia.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txt_ganancia.setForeground(new java.awt.Color(245, 74, 0));
         txt_ganancia.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        txt_ganancia.setText("$85");
 
         btn_aceptar.setBackground(new java.awt.Color(0, 0, 0));
         btn_aceptar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -149,9 +146,8 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         panelDestino.setColorFondo(new java.awt.Color(248, 250, 252));
         panelDestino.setPreferredSize(new java.awt.Dimension(890, 80));
 
-        lbl_destino.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lbl_destino.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_destino.setText("Santa Fé 10");
+        txt_destino.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txt_destino.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(102, 102, 102));
@@ -164,9 +160,9 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
             .addGroup(panelDestinoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelDestinoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_destino, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_destino, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
-                .addContainerGap(466, Short.MAX_VALUE))
+                .addContainerGap(446, Short.MAX_VALUE))
         );
         panelDestinoLayout.setVerticalGroup(
             panelDestinoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,7 +170,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_destino, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                .addComponent(txt_destino, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addGap(15, 15, 15))
         );
 
@@ -182,9 +178,8 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         panelRecoleccion.setColorFondo(new java.awt.Color(248, 250, 252));
         panelRecoleccion.setPreferredSize(new java.awt.Dimension(890, 80));
 
-        lbl_destino1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lbl_destino1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_destino1.setText("Santa Fé 10");
+        txt_origen.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txt_origen.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(102, 102, 102));
@@ -197,9 +192,11 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
             .addGroup(panelRecoleccionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelRecoleccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_destino1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15))
-                .addContainerGap(466, Short.MAX_VALUE))
+                    .addGroup(panelRecoleccionLayout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(0, 780, Short.MAX_VALUE))
+                    .addComponent(txt_origen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelRecoleccionLayout.setVerticalGroup(
             panelRecoleccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,16 +204,15 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_destino1, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                .addComponent(txt_origen, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addGap(15, 15, 15))
         );
 
         panelTipoPaquete.setColorBorde(new java.awt.Color(255, 255, 255));
         panelTipoPaquete.setColorFondo(new java.awt.Color(248, 250, 252));
 
-        lbl_destino2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lbl_destino2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_destino2.setText("CAJA");
+        txt_tipoPaquete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txt_tipoPaquete.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(102, 102, 102));
@@ -229,7 +225,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
             .addGroup(panelTipoPaqueteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelTipoPaqueteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_destino2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
                 .addContainerGap(315, Short.MAX_VALUE))
         );
@@ -239,16 +235,15 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_destino2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
         panelPeso.setColorBorde(new java.awt.Color(255, 255, 255));
         panelPeso.setColorFondo(new java.awt.Color(248, 250, 252));
 
-        lbl_destino3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lbl_destino3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_destino3.setText("5.0kg");
+        txt_peso.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txt_peso.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(102, 102, 102));
@@ -261,7 +256,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
             .addGroup(panelPesoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPesoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_destino3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_peso, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17))
                 .addContainerGap(303, Short.MAX_VALUE))
         );
@@ -271,7 +266,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_destino3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_peso, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -284,7 +279,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
                 .addGroup(panelRedondeado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelRedondeado1Layout.createSequentialGroup()
                         .addGroup(panelRedondeado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_distancia, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_distancia, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelRedondeado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -318,7 +313,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelRedondeado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_ganancia, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_distancia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txt_distancia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(32, 32, 32)
                 .addComponent(panelRecoleccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -361,6 +356,7 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
 
         if (resultado) {
             JOptionPane.showMessageDialog(this, "Entrega aceptada, dirígete al punto de recolección", "Entrega Aceptada", JOptionPane.INFORMATION_MESSAGE);
+            
             dispose();
         } else {
 
@@ -369,67 +365,6 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_aceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmPublicarARepartidores.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new FrmPublicarARepartidores().setVisible(true);
-
-                FrmPublicarARepartidores frame = new FrmPublicarARepartidores();
-
-                SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
-                        // origen
-                        "Reforma 123",
-                        // destino
-                        "Polanco 45",
-                        // tipoPaquete
-                        "Caja",
-                        // pesoAprox
-                        2.5,
-                        // idEmprendedor
-                        1,
-                        // idEnvio
-                        101,
-                        // estado
-                        "pendiente",
-                        // distancia
-                        3.2
-                );
-
-                frame.cargarSolicitud(solicitudMock);
-                frame.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_aceptar;
@@ -443,16 +378,16 @@ public class FrmPublicarARepartidores extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JLabel lbl_destino;
-    private javax.swing.JLabel lbl_destino1;
-    private javax.swing.JLabel lbl_destino2;
-    private javax.swing.JLabel lbl_destino3;
-    private javax.swing.JLabel lbl_distancia;
     private panelesUtilerias.PanelRedondeado panelDestino;
     private panelesUtilerias.PanelRedondeado panelPeso;
     private panelesUtilerias.PanelRedondeado panelRecoleccion;
     private panelesUtilerias.PanelRedondeado panelRedondeado1;
     private panelesUtilerias.PanelRedondeado panelTipoPaquete;
+    private javax.swing.JLabel txt_destino;
+    private javax.swing.JLabel txt_distancia;
     private javax.swing.JLabel txt_ganancia;
+    private javax.swing.JLabel txt_origen;
+    private javax.swing.JLabel txt_peso;
+    private javax.swing.JLabel txt_tipoPaquete;
     // End of variables declaration//GEN-END:variables
 }

@@ -25,11 +25,19 @@ public class ControlRegistrarIncidente {
     private FrmSeguimientoEnTiempoReal frmNavegacion;
     private FrmFormularioIncidente frmFormulario;
     private FrmEstadoReporte frmEstado;
-
+    
+    private static ControlRegistrarIncidente instancia;
+    
     public ControlRegistrarIncidente() {
         // Inicializamos una entrega falsa para la simulación
         entregaActual = new EntregaDTO(101, "Polanco 45", "Caja", "DISPONIBLE");
         incidenteNuevo = new IncidenteDTO();
+    }
+     public static ControlRegistrarIncidente getInstance() {
+        if (instancia == null) {
+            instancia = new ControlRegistrarIncidente();
+        }
+        return instancia;
     }
 
     // --- MÉTODOS DE NAVEGACIÓN ---

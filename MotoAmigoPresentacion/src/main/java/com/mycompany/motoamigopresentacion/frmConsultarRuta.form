@@ -60,7 +60,7 @@
                           <Component id="btnCancelarSolicitud" min="-2" pref="212" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="25" max="32767" attributes="0"/>
+                  <EmptySpace pref="560" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -77,7 +77,7 @@
                       <Component id="btnEnviarSolicitud" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="btnCancelarSolicitud" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                  <EmptySpace pref="109" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

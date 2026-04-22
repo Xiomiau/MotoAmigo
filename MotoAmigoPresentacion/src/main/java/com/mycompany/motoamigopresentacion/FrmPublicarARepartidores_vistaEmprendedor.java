@@ -1,10 +1,20 @@
 package com.mycompany.motoamigopresentacion;
 
-import com.mycompany.motoamigodto.RutaRequestDTO;
-import com.mycompany.motoamigodto.SolicitudEntregaDTO;
-import javax.swing.JOptionPane;
-import com.mycompany.motoamigopresentacion.controladores.ControlPublicarRepartidores;
+import com.mycompany.cusolicitarentrega.BuscarUbicacion;
+import com.mycompany.cusolicitarentrega.IBuscarUbicacion;
+import com.mycompany.motoamigodto.UbicacionDTO;
+import com.mycompany.motoamigopresentacion.controladores.ControlSolicitarEntrega;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 /**
  *
@@ -12,16 +22,117 @@ import java.awt.Color;
  */
 public class FrmPublicarARepartidores_vistaEmprendedor extends javax.swing.JFrame {
 
-    private ControlPublicarRepartidores control = new ControlPublicarRepartidores();
-
+    private ControlSolicitarEntrega control = ControlSolicitarEntrega.getInstance();
+    
+    private final IBuscarUbicacion buscarUbicacion = new BuscarUbicacion();
+    private JPopupMenu popupOrigen;
+    private JPopupMenu popupDestino;
+    private double origenLat, origenLng;
+    private double destinoLat, destinoLng;
+    
     public FrmPublicarARepartidores_vistaEmprendedor() {
         initComponents();
         Color bg = new Color(248, 250, 252);
         this.getContentPane().setBackground(bg);
+        iniciarAutocompletado();
     }
 
-    public void cargarSolicitud() {
+    private void iniciarAutocompletado() {
+        popupOrigen = new JPopupMenu();
+        popupDestino = new JPopupMenu();
+        configurarCampo(txt_origen, popupOrigen, true);
+        configurarCampo(txt_destino, popupDestino, false);
+    }
 
+    private void configurarCampo(JTextField campo, JPopupMenu popup, boolean esOrigen) {
+        Timer[] timer = {null};
+
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_UP
+                        || key == KeyEvent.VK_DOWN
+                        || key == KeyEvent.VK_ENTER
+                        || key == KeyEvent.VK_ESCAPE) {
+                    return;
+                }
+
+                if (timer[0] != null) {
+                    timer[0].stop();
+                }
+
+                timer[0] = new Timer(400, ev -> {
+                    String texto = campo.getText().trim();
+                    new Thread(() -> {
+                        try {
+                            java.util.List<UbicacionDTO> sugerencias = buscarUbicacion.ejecutar(texto);
+                            SwingUtilities.invokeLater(() -> mostrarPopup(campo, popup, sugerencias, esOrigen));
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }).start();
+                });
+                timer[0].setRepeats(false);
+                timer[0].start();
+            }
+        });
+    }
+
+    private void mostrarPopup(JTextField campo, JPopupMenu popup, List<UbicacionDTO> sugerencias, boolean esOrigen) {
+        popup.setBorder(BorderFactory.createLineBorder(new Color(255, 102, 0), 1)); // borde naranja como tu tema
+        popup.setBackground(Color.WHITE);
+        popup.removeAll();
+
+        if (sugerencias == null || sugerencias.isEmpty()) {
+            popup.setVisible(false);
+            return;
+        }
+
+        for (UbicacionDTO dto : sugerencias) {
+            JMenuItem item = new JMenuItem(dto.getDescripcion());
+            item.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            item.setBackground(java.awt.Color.WHITE);
+            item.setForeground(java.awt.Color.DARK_GRAY);
+            item.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            item.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    item.setBackground(new java.awt.Color(255, 102, 0)); // naranja
+                    item.setForeground(java.awt.Color.WHITE);
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    item.setBackground(java.awt.Color.WHITE);
+                    item.setForeground(java.awt.Color.DARK_GRAY);
+                }
+            });
+            item.addActionListener(e -> {
+                campo.setText(dto.getDescripcion());
+                popup.setVisible(false);
+
+                if (esOrigen) {
+                    origenLat = dto.getLatitud();
+                    origenLng = dto.getLongitud();
+                    System.out.println("Origen seleccionado: "
+                            + dto.getDescripcion()
+                            + " [" + origenLng + ", " + origenLat + "]");
+                } else {
+                    destinoLat = dto.getLatitud();
+                    destinoLng = dto.getLongitud();
+                    System.out.println("Destino seleccionado: "
+                            + dto.getDescripcion()
+                            + " [" + destinoLng + ", " + destinoLat + "]");
+                }
+            });
+
+            popup.add(item);
+        }
+
+        // Mostrar el popup justo debajo del JTextArea
+        popup.show(campo, 0, campo.getHeight());
     }
 
     /**
@@ -65,6 +176,11 @@ public class FrmPublicarARepartidores_vistaEmprendedor extends javax.swing.JFram
 
         txt_origen.setForeground(new java.awt.Color(102, 102, 102));
         txt_origen.setText("Ej. Av. Guerrero 550");
+        txt_origen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_origenActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(102, 102, 102));
@@ -203,42 +319,16 @@ public class FrmPublicarARepartidores_vistaEmprendedor extends javax.swing.JFram
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_solicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_solicitarActionPerformed
-        // TODO add your handling code here:
-        SolicitudEntregaDTO solicitudMock = new SolicitudEntregaDTO(
-                // origen
-                "Reforma 123",
-                // destino
-                "Polanco 45",
-                // tipoPaquete
-                "Caja",
-                // pesoAprox
-                2.5,
-                // idEmprendedor
-                1,
-                // idEnvio
-                101,
-                // estado
-                "pendiente",
-                // distancia
-                3.2
-        );
-        boolean resultado = control.publicarSolicitud(solicitudMock);
-
-        if (resultado) {
-
-            RutaRequestDTO mockRequest = new RutaRequestDTO(
-                    "Av. Universidad 123, Ciudad Obregón",
-                    "Calle Morelos 456, Ciudad Obregón"
-            );
-            FrmConsultarRuta frame = new FrmConsultarRuta(mockRequest);
-            frame.setVisible(resultado);
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "No se pudo publicar la solicitud. Intenta de nuevo.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+       
     }//GEN-LAST:event_btn_solicitarActionPerformed
+
+    private void txt_origenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_origenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_origenActionPerformed
+
+    private void txt_origenKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_origenKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_origenKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

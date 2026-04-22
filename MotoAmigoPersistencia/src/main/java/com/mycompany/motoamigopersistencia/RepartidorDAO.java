@@ -14,6 +14,15 @@ import java.util.List;
  * @author xiomi
  */
 public class RepartidorDAO implements IRepartidorDAO {
+    private static RepartidorDAO instancia;
+    
+    public static RepartidorDAO getInstance() {
+        if (instancia == null) {
+            instancia = new RepartidorDAO();
+        }
+        return instancia;
+    }
+
     
     @Override
     public List<RepartidorDTO> obtenerRepartidoresDisponibles() {

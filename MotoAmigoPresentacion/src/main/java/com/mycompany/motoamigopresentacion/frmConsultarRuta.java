@@ -24,14 +24,15 @@ import javax.swing.JPanel;
  * @author calo2
  */
 
-public class FrmConsultarRuta extends javax.swing.JFrame {
+public class frmConsultarRuta extends javax.swing.JFrame {
 
     private IConsultarRuta casoUso;
 
     /**
      * Creates new form ConsultarRutaFORM
+     * @param request
      */
-    public FrmConsultarRuta(RutaRequestDTO request) {
+    public frmConsultarRuta(RutaRequestDTO request) {
         initComponents();
         inicializarPanelMapa();
         IRutaBO rutaBO = new RutaBO(new MapBoxMock());
@@ -248,7 +249,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
                         .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(560, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,7 +263,7 @@ public class FrmConsultarRuta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEnviarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelarSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(109, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.mycompany.motoamigopresentacion.controladores;
 
 import com.mycompany.motoamigodto.RepartidorDTO;
@@ -10,26 +7,28 @@ import com.mycompany.motoamigonegocio.GestionRepartidores;
 import com.mycompany.motoamigonegocio.IGestionRepartidores;
 import java.util.List;
 
-/**
- *
- * @author xiomi
- */
-public class ControlPublicarRepartidores {
-    
+public class ControlSolicitarEntrega {
+
+    private static ControlSolicitarEntrega instancia;
+
     private IGestionRepartidores gestionRepartidores;
 
-    public ControlPublicarRepartidores() {
-        this.gestionRepartidores = new GestionRepartidores();
+    private ControlSolicitarEntrega() {
+        this.gestionRepartidores = GestionRepartidores.getInstance(); 
     }
-    
+
+    public static ControlSolicitarEntrega getInstance() {
+        if (instancia == null) {
+            instancia = new ControlSolicitarEntrega();
+        }
+        return instancia;
+    }
+
     public List<RepartidorDTO> obtenerRepartidoresDisponibles() {
         return gestionRepartidores.obtenerRepartidoresDisponibles();
     }
-    
+
     public boolean publicarSolicitud(SolicitudEntregaDTO solicitud) {
         return gestionRepartidores.publicarSolicitud(solicitud);
     }
-    
-    
-    
 }

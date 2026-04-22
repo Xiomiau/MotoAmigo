@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package com.mycompany.motoamigopresentacion;
 
 import Utilerias.OSMTileFactoryCustom;
@@ -27,30 +24,27 @@ import panelesUtilerias.PanelHeader;
  *
  * @author joset
  */
-public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
-
+public class FrmSeguimientoEnTiempoReal_Emprendedor extends javax.swing.JFrame {
     private JXMapViewer mapViewer;
     private WaypointPainter<DefaultWaypoint> waypointPainter;
     private DefaultWaypoint marcador;
 
     private final IFuncionalidadSeguimiento funcionalidad;
     private ControlRegistrarIncidente control = ControlRegistrarIncidente.getInstance();
-
-    public FrmSeguimientoEnTiempoReal() {
-        
+    
+    /**
+     * Creates new form FrmSeguimientoEnTiempoReal_Emprendedor
+     */
+    public FrmSeguimientoEnTiempoReal_Emprendedor() {
         this.funcionalidad = FuncionalidadSeguimiento.crear();
         initComponents();
         inicializarUI();
         inicializarMapa();
         setLocationRelativeTo(null);
     }
-
-    /**
-     * Aplica estilos visuales de los componentes.
-     */
     private void inicializarUI() {
+        utileriasBotones.btnNaranja(btnContactarRepa);
         utileriasBotones.btnNaranja(btnVolverMenu);
-        utileriasBotones.btnRojo(btnReportar);
         panPrincipal.add(new PanelHeader(), new AbsoluteConstraints(0, 0, 1366, 130));
         txtSeguimiento.setEditable(false);
 
@@ -94,7 +88,6 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
             }
         });
     }
-
     /**
      * Crea temporizador que cada 3 segundos consulta la siguiente ubicación del
      * repartidor usando el modulo de funcionalidad. Actualiza el estado y el
@@ -139,7 +132,6 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         mapViewer.setAddressLocation(nuevaPos);
         mapViewer.repaint();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -158,8 +150,8 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         lblEstado = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtSeguimiento = new javax.swing.JTextArea();
+        btnContactarRepa = new javax.swing.JButton();
         btnVolverMenu = new javax.swing.JButton();
-        btnReportar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1008, 738));
@@ -167,6 +159,9 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         setResizable(false);
 
         panPrincipal.setBackground(new java.awt.Color(255, 255, 255));
+        panPrincipal.setMaximumSize(new java.awt.Dimension(1008, 738));
+        panPrincipal.setMinimumSize(new java.awt.Dimension(1008, 738));
+        panPrincipal.setPreferredSize(new java.awt.Dimension(1008, 738));
 
         panelSuperior.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -250,6 +245,16 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnContactarRepa.setBackground(new java.awt.Color(255, 102, 0));
+        btnContactarRepa.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnContactarRepa.setForeground(new java.awt.Color(255, 255, 255));
+        btnContactarRepa.setText("Contactar Repartidor");
+        btnContactarRepa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContactarRepaActionPerformed(evt);
+            }
+        });
+
         btnVolverMenu.setBackground(new java.awt.Color(255, 102, 0));
         btnVolverMenu.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnVolverMenu.setForeground(new java.awt.Color(255, 255, 255));
@@ -257,16 +262,6 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         btnVolverMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVolverMenuActionPerformed(evt);
-            }
-        });
-
-        btnReportar.setBackground(new java.awt.Color(204, 0, 51));
-        btnReportar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnReportar.setForeground(new java.awt.Color(255, 255, 255));
-        btnReportar.setText("Reportar entrega");
-        btnReportar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReportarActionPerformed(evt);
             }
         });
 
@@ -278,11 +273,11 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
             .addComponent(panelInformacionRuta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panPrincipalLayout.createSequentialGroup()
-                .addGap(165, 165, 165)
-                .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
+                .addGap(228, 228, 228)
+                .addComponent(btnContactarRepa)
+                .addGap(99, 99, 99)
                 .addComponent(btnVolverMenu)
-                .addContainerGap(435, Short.MAX_VALUE))
+                .addContainerGap(314, Short.MAX_VALUE))
         );
         panPrincipalLayout.setVerticalGroup(
             panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,10 +287,10 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
                 .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addComponent(panelInformacionRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnReportar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnContactarRepa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -304,28 +299,56 @@ public class FrmSeguimientoEnTiempoReal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnContactarRepaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContactarRepaActionPerformed
+        JOptionPane.showMessageDialog(
+            this,
+            "Contactando con el repartidor",
+            "",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    }//GEN-LAST:event_btnContactarRepaActionPerformed
+
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnVolverMenuActionPerformed
 
-    private void btnReportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportarActionPerformed
-        control.irAFormularioIncidente();
-    }//GEN-LAST:event_btnReportarActionPerformed
-
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmSeguimientoEnTiempoReal_Emprendedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
-
- /* Create and display the form */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmSeguimientoEnTiempoReal().setVisible(true);
+                new FrmSeguimientoEnTiempoReal_Emprendedor().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnReportar;
+    private javax.swing.JButton btnContactarRepa;
     private javax.swing.JButton btnVolverMenu;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
