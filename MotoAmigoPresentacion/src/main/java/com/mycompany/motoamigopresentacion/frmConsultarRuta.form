@@ -53,6 +53,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
+<<<<<<< Updated upstream
                       <Component id="panelMapa" max="32767" attributes="0"/>
                       <Component id="panelInformacionRuta" max="32767" attributes="0"/>
                   </Group>
@@ -64,22 +65,46 @@
                   <EmptySpace min="-2" pref="157" max="-2" attributes="0"/>
                   <Component id="btnCancelarSolicitud" min="-2" pref="212" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="230" max="-2" attributes="0"/>
+=======
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btnEnviarSolicitud" min="-2" pref="200" max="-2" attributes="0"/>
+                          <EmptySpace pref="543" max="32767" attributes="0"/>
+                          <Component id="btnCancelarSolicitud" min="-2" pref="212" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="panelMapa" alignment="0" max="32767" attributes="0"/>
+                      <Component id="panelInformacionRuta" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="34" max="32767" attributes="0"/>
+>>>>>>> Stashed changes
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
+<<<<<<< Updated upstream
                   <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
                   <Component id="panelMapa" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="panelInformacionRuta" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+=======
+                  <Component id="panelSuperior" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="panelMapa" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="29" max="32767" attributes="0"/>
+                  <Component id="panelInformacionRuta" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+>>>>>>> Stashed changes
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnCancelarSolicitud" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="btnEnviarSolicitud" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
+<<<<<<< Updated upstream
                   <EmptySpace pref="71" max="32767" attributes="0"/>
+=======
+                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+>>>>>>> Stashed changes
               </Group>
           </Group>
         </DimensionLayout>
@@ -95,12 +120,34 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
+<<<<<<< Updated upstream
+=======
+                  <EmptySpace min="0" pref="1008" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="28" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+        <Container class="javax.swing.JPanel" name="panelMapa">
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+>>>>>>> Stashed changes
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
+<<<<<<< Updated upstream
                   <EmptySpace min="0" pref="382" max="32767" attributes="0"/>
+=======
+                  <EmptySpace min="0" pref="447" max="32767" attributes="0"/>
+>>>>>>> Stashed changes
               </Group>
             </DimensionLayout>
           </Layout>
@@ -114,11 +161,20 @@
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="jLabel7" min="-2" pref="63" max="-2" attributes="0"/>
-                              <Component id="jLabel3" min="-2" pref="63" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jLabel7" min="-2" pref="63" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" min="-2" pref="63" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="lblETA" pref="311" max="32767" attributes="0"/>
+                                  <Component id="lblDistancia" max="32767" attributes="0"/>
+                                  <Component id="lblCosto" alignment="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
+<<<<<<< Updated upstream
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
@@ -134,6 +190,9 @@
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
+=======
+                      <EmptySpace max="32767" attributes="0"/>
+>>>>>>> Stashed changes
                   </Group>
               </Group>
             </DimensionLayout>

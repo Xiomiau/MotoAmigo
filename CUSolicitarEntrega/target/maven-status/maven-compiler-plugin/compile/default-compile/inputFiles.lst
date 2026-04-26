@@ -1,6 +1,15 @@
+<<<<<<< Updated upstream
 C:\Users\joset\Documentos\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\BuscarUbicacion.java
 C:\Users\joset\Documentos\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\ConsultarRuta.java
 C:\Users\joset\Documentos\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\FuncionalidadSeguimiento.java
 C:\Users\joset\Documentos\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\IBuscarUbicacion.java
 C:\Users\joset\Documentos\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\IConsultarRuta.java
 C:\Users\joset\Documentos\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\IFuncionalidadSeguimiento.java
+=======
+C:\Users\calo2\Documents\GitHub\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\ConsultarRuta.java
+C:\Users\calo2\Documents\GitHub\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\FuncionalidadSeguimiento.java
+C:\Users\calo2\Documents\GitHub\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\GestionRepartidores.java
+C:\Users\calo2\Documents\GitHub\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\IConsultarRuta.java
+C:\Users\calo2\Documents\GitHub\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\IFuncionalidadSeguimiento.java
+C:\Users\calo2\Documents\GitHub\MotoAmigo\CUSolicitarEntrega\src\main\java\com\mycompany\cusolicitarentrega\IGestionRepartidores.java
+>>>>>>> Stashed changes
